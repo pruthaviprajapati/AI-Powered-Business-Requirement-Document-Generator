@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects • ReqAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+</head>
+<body>
+
+  <div class="main-content">
+    <div class="content-area">
+
+      <!-- Header -->
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+          <h5 class="mb-0 fw-bold">Projects</h5>
+          <small class="text-muted">Manage your requirement projects</small>
+        </div>
+        <button class="btn-primary-custom" onclick="openCreateModal()">
+          <i class="fas fa-plus"></i> New Project
+        </button>
+      </div>
+
+      <!-- Projects Table Card -->
+      <div class="req-card">
+        <div class="card-body p-0">
+          <div id="projects-table-wrapper"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Create / Edit Modal -->
+  <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content" style="border-radius:var(--border-radius);">
+        <div class="modal-header">
+          <h5 class="modal-title fw-semibold" id="projectModalLabel">New Project</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="project-id">
+          <div class="mb-3">
+            <label class="form-label-custom">Project Name *</label>
+            <input type="text" class="form-control-custom" id="project-name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label-custom">Description</label>
+            <textarea class="form-control-custom" id="project-desc" rows="3"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label-custom">Client Name</label>
+            <input type="text" class="form-control-custom" id="project-client-name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label-custom">Client Email</label>
+            <input type="email" class="form-control-custom" id="project-client-email">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn-primary-custom" onclick="saveProject()">
+            <i class="fas fa-save"></i> Save Project
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script>
+    requireAuth();
+    renderLayout('Projects', 'projects');
+
+    let modalInstance = null;
+
+    async function loadProjects() {
+      showLoading();
+      try {
+        const data = await getProjectsAPI();
+        renderProjectsTable(data.projects || []);
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function renderProjectsTable(projects) {
+      const wrapper = document.getElementById('projects-table-wrapper');
+      if (projects.length === 0) {
+        wrapper.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h5>No Projects Yet</h5>
+            <p>Create your first project to get started.</p>
+          </div>`;
+        return;
+      }
+      wrapper.innerHTML = `
+        <div class="table-responsive">
+          <table class="req-table">
+            <thead>
+              <tr>
+                <th>Project Name</th>
+                <th>Client</th>
+                <th>Meetings</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${projects.map(p => `
+                <tr>
+                  <td><strong>${p.name}</strong></td>
+                  <td>${p.client_name || '—'}</td>
+                  <td><span class="badge bg-light text-dark">${p.meeting_count || 0}</span></td>
+                  <td>${getStatusBadge(p.status)}</td>
+                  <td>${formatDate(p.created_at)}</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+                      <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteProject(${p.id}, '${p.name}')">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+    }
+
+    function openCreateModal() {
+      document.getElementById('projectModalLabel').textContent = 'New Project';
+      document.getElementById('project-id').value = '';
+      document.getElementById('project-name').value = '';
+      document.getElementById('project-desc').value = '';
+      document.getElementById('project-client-name').value = '';
+      document.getElementById('project-client-email').value = '';
+      modalInstance = new bootstrap.Modal(document.getElementById('projectModal'));
+      modalInstance.show();
+    }
+
+    function openEditModal(project) {
+      document.getElementById('projectModalLabel').textContent = 'Edit Project';
+      document.getElementById('project-id').value = project.id;
+      document.getElementById('project-name').value = project.name;
+      document.getElementById('project-desc').value = project.description || '';
+      document.getElementById('project-client-name').value = project.client_name || '';
+      document.getElementById('project-client-email').value = project.client_email || '';
+      modalInstance = new bootstrap.Modal(document.getElementById('projectModal'));
+      modalInstance.show();
+    }
+
+    async function saveProject() {
+      const id = document.getElementById('project-id').value;
+      const payload = {
+        name: document.getElementById('project-name').value.trim(),
+        description: document.getElementById('project-desc').value.trim() || null,
+        client_name: document.getElementById('project-client-name').value.trim() || null,
+        client_email: document.getElementById('project-client-email').value.trim() || null,
+      };
+      if (!payload.name) { showToast('Project name is required.', 'warning'); return; }
+
+      showLoading();
+      try {
+        if (id) {
+          await updateProjectAPI(id, payload);
+          showToast('Project updated!', 'success');
+        } else {
+          await createProjectAPI(payload);
+          showToast('Project created!', 'success');
+        }
+        if (modalInstance) modalInstance.hide();
+        loadProjects();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function deleteProject(id, name) {
+      if (!confirmAction(`Delete project "${name}"? This will also delete all its meetings.`)) return;
+      showLoading();
+      try {
+        await deleteProjectAPI(id);
+        showToast('Project deleted.', 'success');
+        loadProjects();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>

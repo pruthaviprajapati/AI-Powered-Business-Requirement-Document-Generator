@@ -1,0 +1,34 @@
+# ── Web Framework ─────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+
+# ── Database ──────────────────────────────────────────────────────
+sqlalchemy==2.0.30
+aiosqlite==0.20.0
+
+# ── Validation ────────────────────────────────────────────────────
+pydantic==2.7.1
+pydantic[email]==2.7.1
+
+# ── Authentication ────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+bcrypt==4.1.3
+
+# ── Configuration ─────────────────────────────────────────────────
+python-dotenv==1.0.1
+
+# ── File handling ─────────────────────────────────────────────────
+python-multipart==0.0.9
+aiofiles==23.2.1
+
+# ── HTTP Client (for future Groq API calls) ───────────────────────
+httpx==0.27.0
+
+# ── Future AI Stack (install when needed in Phase 2+) ─────────────
+# faster-whisper
+# pyannote.audio
+# spacy
+# transformers
+# sentence-transformers
+# groq
+# python-docx

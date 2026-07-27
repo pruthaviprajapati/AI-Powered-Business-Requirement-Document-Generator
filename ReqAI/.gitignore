@@ -1,0 +1,52 @@
+# ── Python ────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# ── Virtual Environments ──────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ── Environment Variables ─────────────────────────────────────────
+.env
+backend/.env
+
+# ── Database ──────────────────────────────────────────────────────
+*.db
+*.sqlite3
+
+# ── Logs ──────────────────────────────────────────────────────────
+backend/logs/*.log
+*.log
+
+# ── Uploads & Generated Files ─────────────────────────────────────
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/generated/*
+!backend/generated/.gitkeep
+
+# ── Future ML model files ─────────────────────────────────────────
+backend/future_ml/*.bin
+backend/future_ml/*.pt
+backend/future_ml/*.pkl
+backend/future_nlp/*.bin
+
+# ── IDEs ──────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Testing ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/

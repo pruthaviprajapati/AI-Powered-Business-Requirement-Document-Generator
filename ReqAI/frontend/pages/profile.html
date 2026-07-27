@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile • ReqAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+</head>
+<body>
+
+  <div class="main-content">
+    <div class="content-area">
+      <h5 class="fw-bold mb-4">My Profile</h5>
+
+      <div class="row g-4">
+        <!-- Avatar & info -->
+        <div class="col-md-4">
+          <div class="req-card text-center">
+            <div class="card-body">
+              <div id="avatar-circle" style="
+                width:80px;height:80px;border-radius:50%;background:var(--primary);
+                color:#fff;font-size:2rem;font-weight:700;
+                display:inline-flex;align-items:center;justify-content:center;
+                margin-bottom:1rem;">U</div>
+              <h5 class="mb-0 fw-semibold" id="profile-name">—</h5>
+              <p class="text-muted mb-1" id="profile-username" style="font-size:.85rem;">—</p>
+              <span class="badge-status badge-active" id="profile-role">user</span>
+              <hr>
+              <p class="text-muted" id="profile-bio" style="font-size:.85rem;">No bio added yet.</p>
+              <p class="text-muted mb-0" style="font-size:.75rem;">
+                Member since <span id="profile-since">—</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit form -->
+        <div class="col-md-8">
+          <div class="req-card mb-3">
+            <div class="card-header"><h6 class="mb-0 fw-semibold">Edit Profile</h6></div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label-custom">Full Name</label>
+                <input type="text" class="form-control-custom" id="edit-full-name">
+              </div>
+              <div class="mb-3">
+                <label class="form-label-custom">Bio</label>
+                <textarea class="form-control-custom" id="edit-bio" rows="3"></textarea>
+              </div>
+              <button class="btn-primary-custom" onclick="saveProfile()">
+                <i class="fas fa-save"></i> Save Changes
+              </button>
+            </div>
+          </div>
+
+          <div class="req-card">
+            <div class="card-header"><h6 class="mb-0 fw-semibold">Change Password</h6></div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label-custom">Current Password</label>
+                <input type="password" class="form-control-custom" id="current-password">
+              </div>
+              <div class="mb-3">
+                <label class="form-label-custom">New Password</label>
+                <input type="password" class="form-control-custom" id="new-password">
+              </div>
+              <button class="btn-primary-custom" onclick="savePassword()">
+                <i class="fas fa-lock"></i> Update Password
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script>
+    requireAuth();
+    renderLayout('Profile', 'profile');
+
+    async function loadProfile() {
+      try {
+        const user = await getUserProfileAPI();
+        document.getElementById('profile-name').textContent = user.full_name;
+        document.getElementById('profile-username').textContent = '@' + user.username;
+        document.getElementById('profile-role').textContent = user.role;
+        document.getElementById('profile-bio').textContent = user.bio || 'No bio added yet.';
+        document.getElementById('profile-since').textContent = formatDate(user.created_at);
+        document.getElementById('avatar-circle').textContent = (user.full_name || user.username)[0].toUpperCase();
+        document.getElementById('edit-full-name').value = user.full_name;
+        document.getElementById('edit-bio').value = user.bio || '';
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    async function saveProfile() {
+      const payload = {
+        full_name: document.getElementById('edit-full-name').value.trim() || null,
+        bio: document.getElementById('edit-bio').value.trim() || null,
+      };
+      showLoading();
+      try {
+        await updateUserProfileAPI(payload);
+        showToast('Profile updated!', 'success');
+        loadProfile();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function savePassword() {
+      const current_password = document.getElementById('current-password').value;
+      const new_password = document.getElementById('new-password').value;
+      if (!current_password || !new_password) { showToast('Both password fields are required.', 'warning'); return; }
+
+      showLoading();
+      try {
+        await changePasswordAPI(current_password, new_password);
+        showToast('Password updated successfully!', 'success');
+        document.getElementById('current-password').value = '';
+        document.getElementById('new-password').value = '';
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

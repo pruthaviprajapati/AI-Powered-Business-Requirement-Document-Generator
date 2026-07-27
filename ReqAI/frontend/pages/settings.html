@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings • ReqAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+</head>
+<body>
+
+  <div class="main-content">
+    <div class="content-area">
+      <h5 class="fw-bold mb-4">Settings</h5>
+
+      <div class="row g-4">
+        <div class="col-lg-8">
+
+          <!-- App preferences -->
+          <div class="req-card mb-3">
+            <div class="card-header"><h6 class="mb-0 fw-semibold">Application Preferences</h6></div>
+            <div class="card-body">
+              <div class="mb-3">
+                <label class="form-label-custom">Date Format</label>
+                <select class="form-control-custom" id="date-format">
+                  <option value="MMM DD, YYYY">Jan 01, 2025</option>
+                  <option value="DD/MM/YYYY">01/01/2025</option>
+                  <option value="MM/DD/YYYY">01/01/2025 (US)</option>
+                </select>
+              </div>
+              <button class="btn-primary-custom" onclick="showToast('Settings saved.', 'success')">
+                <i class="fas fa-save"></i> Save Preferences
+              </button>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="req-card" style="border-color:#fee2e2;">
+            <div class="card-header" style="background:#fff5f5;border-color:#fee2e2;">
+              <h6 class="mb-0 fw-semibold text-danger">Danger Zone</h6>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-3" style="font-size:.875rem;">
+                Deactivating your account will disable your login. This action can be reversed by contacting support.
+              </p>
+              <button class="btn btn-outline-danger" onclick="deactivateAccount()">
+                <i class="fas fa-user-slash me-2"></i>Deactivate Account
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Info panel -->
+        <div class="col-lg-4">
+          <div class="req-card">
+            <div class="card-header"><h6 class="mb-0 fw-semibold">About ReqAI</h6></div>
+            <div class="card-body">
+              <ul class="list-unstyled mb-0" style="font-size:.875rem;">
+                <li class="mb-2"><i class="fas fa-tag me-2 text-primary"></i>Version 1.0.0</li>
+                <li class="mb-2"><i class="fas fa-code-branch me-2 text-primary"></i>Phase 1 – Foundation</li>
+                <li class="mb-2"><i class="fas fa-robot me-2 text-primary"></i>AI Pipeline: Coming in Phase 2</li>
+                <li><i class="fas fa-file-word me-2 text-primary"></i>BRD Export: Coming in Phase 3</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script>
+    requireAuth();
+    renderLayout('Settings', 'settings');
+
+    async function deactivateAccount() {
+      if (!confirmAction('Are you sure you want to deactivate your account? You will be logged out immediately.')) return;
+      showLoading();
+      try {
+        await apiRequest('/users/account', 'DELETE');
+        showToast('Account deactivated.', 'info');
+        setTimeout(() => { clearSession(); window.location.href = 'login.html'; }, 1500);
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+  </script>
+</body>
+</html>
