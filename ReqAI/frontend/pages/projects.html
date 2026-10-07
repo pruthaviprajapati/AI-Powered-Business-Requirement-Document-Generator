@@ -82,12 +82,14 @@
     renderLayout('Projects', 'projects');
 
     let modalInstance = null;
+    let allProjects = [];
 
     async function loadProjects() {
       showLoading();
       try {
         const data = await getProjectsAPI();
-        renderProjectsTable(data.projects || []);
+        allProjects = data.projects || [];
+        renderProjectsTable(allProjects);
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
@@ -106,7 +108,7 @@
           </div>`;
         return;
       }
-      wrapper.innerHTML = `
+            wrapper.innerHTML = `
         <div class="table-responsive">
           <table class="req-table">
             <thead>
@@ -128,10 +130,10 @@
                   <td>${getStatusBadge(p.status)}</td>
                   <td>${formatDate(p.created_at)}</td>
                   <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="openEditModal(${JSON.stringify(p).replace(/"/g,'&quot;')})">
+                    <button class="btn btn-sm btn-outline-primary me-1" data-project-id="${p.id}" onclick="openEditById(this.dataset.projectId)">
                       <i class="fas fa-pen"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteProject(${p.id}, '${p.name}')">
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteProject(${p.id})">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -150,6 +152,12 @@
       document.getElementById('project-client-email').value = '';
       modalInstance = new bootstrap.Modal(document.getElementById('projectModal'));
       modalInstance.show();
+    }
+
+    function openEditById(id) {
+      const project = allProjects.find(p => p.id === parseInt(id));
+      if (!project) { showToast('Project not found.', 'error'); return; }
+      openEditModal(project);
     }
 
     function openEditModal(project) {
@@ -191,7 +199,9 @@
       }
     }
 
-    async function deleteProject(id, name) {
+    async function deleteProject(id) {
+      const project = allProjects.find(p => p.id === id);
+      const name = project ? project.name : 'this project';
       if (!confirmAction(`Delete project "${name}"? This will also delete all its meetings.`)) return;
       showLoading();
       try {

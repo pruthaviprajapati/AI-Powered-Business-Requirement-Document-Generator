@@ -30,7 +30,7 @@ async function apiRequest(endpoint, method = 'GET', body = null, requiresAuth = 
   // Handle 401 Unauthorized
   if (response.status === 401 && requiresAuth) {
     clearSession();
-    window.location.href = '/frontend/pages/login.html';
+    window.location.href = 'login.html';
     throw new Error('Session expired. Redirecting to login...');
   }
 
@@ -56,7 +56,7 @@ async function registerAPI(full_name, email, username, password) {
 
 // Projects
 async function getProjectsAPI() {
-  return apiRequest('/projects', 'GET');
+  return apiRequest('/projects/', 'GET');
 }
 
 async function getProjectByIdAPI(id) {
@@ -78,7 +78,7 @@ async function deleteProjectAPI(id) {
 // Meetings
 async function getMeetingsAPI(projectId = null) {
   const query = projectId ? `?project_id=${projectId}` : '';
-  return apiRequest(`/meetings${query}`, 'GET');
+  return apiRequest(`/meetings/${query}`, 'GET');
 }
 
 async function getMeetingByIdAPI(id) {

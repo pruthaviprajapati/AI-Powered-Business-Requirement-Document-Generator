@@ -36,6 +36,6 @@ def get_db():
 def create_all_tables() -> None:
     """Create all tables defined in ORM models (called on startup)."""
     # Import models here so SQLAlchemy registers them before create_all
-    from app.models import user, project, meeting  # noqa: F401
+    from app.models import user, project, meeting, requirement_candidate, requirement_similarity, follow_up_question, brd_document  # noqa: F401
 
     Base.metadata.create_all(bind=engine)

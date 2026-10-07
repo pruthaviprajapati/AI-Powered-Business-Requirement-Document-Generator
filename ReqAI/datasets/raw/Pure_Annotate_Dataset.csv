@@ -1,0 +1,101 @@
+id,sentence,security,reliability,NFR_boolean
+1,The system shall encrypt all communications using TLS.,1,0,1
+2,The application must be available 99.9 percent of the time.,0,1,1
+3,Users shall be able to log in with their email and password.,0,0,0
+4,The system must validate all user inputs to prevent injection attacks.,1,0,1
+5,The application shall recover from failures within 30 seconds.,0,1,1
+6,The system shall provide a dashboard for monitoring activities.,0,0,0
+7,All API requests must be authenticated using JWT tokens.,1,0,1
+8,The system must maintain 99.95 percent uptime during peak hours.,0,1,1
+9,The user shall be able to upload files up to 100 MB.,0,0,0
+10,The application must implement rate limiting to prevent abuse.,1,0,1
+11,The system shall provide automatic failover for critical services.,0,1,1
+12,Users must be able to search and filter data by various criteria.,0,0,0
+13,The system must store passwords using strong cryptographic hashing.,1,0,1
+14,The application shall perform health checks every 60 seconds.,0,1,1
+15,The system shall allow users to export data in multiple formats.,0,0,0
+16,All sensitive data must be encrypted at rest using AES-256.,1,0,1
+17,The system must replicate data across multiple availability zones.,0,1,1
+18,The application shall support role-based access control.,0,0,0
+19,The system must prevent cross-site scripting attacks.,1,0,1
+20,The application shall maintain a 99.5 percent availability SLA.,0,1,1
+21,Users shall be able to create and manage projects.,0,0,0
+22,The system must implement CSRF protection for all forms.,1,0,1
+23,The application shall automatically retry failed operations.,0,1,1
+24,The system shall generate reports on demand.,0,0,0
+25,All user sessions must be terminated after inactivity.,1,0,1
+26,The system must support graceful degradation when components fail.,0,1,1
+27,The application shall allow administrators to manage users.,0,0,0
+28,The system must log all security-related events for auditing.,1,0,1
+29,The application must recover from network failures within 5 seconds.,0,1,1
+30,The system shall provide email notifications for critical events.,0,0,0
+31,The application must use parameterized queries to prevent SQL injection.,1,0,1
+32,The system shall support active-active configuration for high availability.,0,1,1
+33,Users shall be able to comment on tasks and projects.,0,0,0
+34,The system must enforce multi-factor authentication for privileged accounts.,1,0,1
+35,The application shall queue requests during high load and process them when available.,0,1,1
+36,The system shall allow users to set their preferences.,0,0,0
+37,All API keys must be rotated every 90 days.,1,0,1
+38,The system must maintain transaction consistency under concurrent operations.,0,1,1
+39,The application shall provide a search functionality for all records.,0,0,0
+40,The system must scan uploaded files for malware before processing.,1,0,1
+41,The application shall maintain a circuit breaker for external services.,0,1,1
+42,The system shall support bulk import and export operations.,0,0,0
+43,The application must implement content security policy headers.,1,0,1
+44,The system must support database replication for disaster recovery.,0,1,1
+45,Users shall be able to generate custom reports.,0,0,0
+46,The system must audit all changes to sensitive data.,1,0,1
+47,The application shall maintain data integrity during system failures.,0,1,1
+48,The system shall provide a REST API for integrations.,0,0,0
+49,The application must require strong password complexity.,1,0,1
+50,The system must detect and alert on abnormal system behavior.,0,1,1
+51,The application shall allow team collaboration on shared documents.,0,0,0
+52,The system must prevent unauthorized access to administrative functions.,1,0,1
+53,The application shall support hot-standby configuration.,0,1,1
+54,The system shall allow scheduling of automated tasks.,0,0,0
+55,The application must implement secure token storage.,1,0,1
+56,The system shall process requests within acceptable time limits during peak load.,0,1,1
+57,Users shall be able to manage their notification settings.,0,0,0
+58,The system must verify the integrity of all downloaded files.,1,0,1
+59,The application shall use heartbeat monitoring to detect failures.,0,1,1
+60,The system shall provide a user-friendly onboarding experience.,0,0,0
+61,The application must protect against brute force login attempts.,1,0,1
+62,The system must provide redundant network connections.,0,1,1
+63,The user shall be able to track project progress visually.,0,0,0
+64,The system must enforce least privilege access principles.,1,0,1
+65,The application shall support automated database backups.,0,1,1
+66,The system shall provide workflow automation capabilities.,0,0,0
+67,The application must perform security assessments regularly.,1,0,1
+68,The system must support load balancing across multiple instances.,0,1,1
+69,The system shall allow users to upload profile pictures.,0,0,0
+70,The application must use secure communication protocols only.,1,0,1
+71,The system shall provide continuous monitoring of system health.,0,1,1
+72,Users shall be able to invite colleagues to join the platform.,0,0,0
+73,The system must protect user data from unauthorized disclosure.,1,0,1
+74,The application shall minimize downtime during updates.,0,1,1
+75,The system shall provide a calendar view for scheduled events.,0,0,0
+76,The application must implement data loss prevention mechanisms.,1,0,1
+77,The system must provide automatic recovery after database failure.,0,1,1
+78,The system shall support drag-and-drop for file management.,0,0,0
+79,All third-party integrations must use secure OAuth2 authentication.,1,0,1
+80,The application shall ensure no single point of failure exists.,0,1,1
+81,The system shall allow users to organize items into folders.,0,0,0
+82,The application must implement network intrusion detection.,1,0,1
+83,The system must maintain service continuity during infrastructure upgrades.,0,1,1
+84,The system shall provide version history for documents.,0,0,0
+85,The application must ensure data is backed up every hour.,1,0,1
+86,The system shall provide status dashboards for all services.,0,1,1
+87,Users shall be able to set task priorities and deadlines.,0,0,0
+88,The system must prevent unauthorized data exfiltration.,1,0,1
+89,The application shall support blue-green deployment strategies.,0,1,1
+90,The system shall allow printing of reports and documents.,0,0,0
+91,The application must perform input sanitization on all user data.,1,0,1
+92,The system must support automatic scaling based on demand.,0,1,1
+93,The system shall provide a mobile-friendly interface.,0,0,0
+94,The application must log all failed authentication attempts.,1,0,1
+95,The system shall maintain consistency across distributed nodes.,0,1,1
+96,The system shall allow users to archive completed projects.,0,0,0
+97,The application must use secure session management.,1,0,1
+98,The system must detect and recover from memory leaks automatically.,0,1,1
+99,The system shall provide integration with popular productivity tools.,0,0,0
+100,The application must implement zero-trust security architecture.,1,0,1

@@ -1,0 +1,27 @@
+ReqAI – DistilBERT Requirement Classifier
+Model: distilbert-base-uncased
+Device: cpu
+
+Test Accuracy: 0.3500
+Test Loss:     2.2357
+
+Training History:
+  Epoch 1: train_loss=2.4379  val_loss=2.2048  val_acc=0.3000
+  Epoch 2: train_loss=2.1973  val_loss=1.9828  val_acc=0.3000
+  Epoch 3: train_loss=2.0451  val_loss=1.8583  val_acc=0.3000
+  Epoch 4: train_loss=1.9738  val_loss=1.8124  val_acc=0.3000
+
+Classification Report:
+                 precision    recall  f1-score   support
+
+     Functional       0.35      1.00      0.52         7
+       Security       0.00      0.00      0.00         3
+    Performance       0.00      0.00      0.00         1
+      Usability       0.00      0.00      0.00         2
+    Reliability       0.00      0.00      0.00         5
+Maintainability       0.00      0.00      0.00         1
+    Portability       0.00      0.00      0.00         1
+
+       accuracy                           0.35        20
+      macro avg       0.05      0.14      0.07        20
+   weighted avg       0.12      0.35      0.18        20

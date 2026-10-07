@@ -95,12 +95,15 @@
     let modalInstance = null;
     let allProjects = [];
 
+    let allMeetings = [];
+
     async function loadAll() {
       showLoading();
       try {
         const [pData, mData] = await Promise.all([getProjectsAPI(), getMeetingsAPI()]);
         allProjects = pData.projects || [];
-        renderMeetingsTable(mData.meetings || []);
+        allMeetings = mData.meetings || [];
+        renderMeetingsTable(allMeetings);
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
@@ -145,12 +148,15 @@
                   <td>${m.duration_minutes ? m.duration_minutes + ' min' : '—'}</td>
                   <td>${getStatusBadge(m.processing_status)}</td>
                   <td>
+                    <a href="meeting_detail.html?id=${m.id}" class="btn btn-sm btn-outline-success me-1" title="View Details">
+                      <i class="fas fa-eye"></i>
+                    </a>
                     <button class="btn btn-sm btn-outline-primary me-1"
-                      onclick="openEditModal(${JSON.stringify(m).replace(/"/g,'&quot;')})">
+                      data-meeting-id="${m.id}" onclick="openEditById(this.dataset.meetingId)">
                       <i class="fas fa-pen"></i>
                     </button>
                     <button class="btn btn-sm btn-outline-danger"
-                      onclick="deleteMeeting(${m.id}, '${m.title.replace(/'/g,'\\'')}')">
+                      onclick="deleteMeeting(${m.id})">
                       <i class="fas fa-trash"></i>
                     </button>
                   </td>
@@ -166,9 +172,30 @@
         allProjects.map(p =>
           `<option value="${p.id}" ${String(p.id) === String(selectedId) ? 'selected' : ''}>${p.name}</option>`
         ).join('');
+      // Auto-select first project if only one exists
+      if (allProjects.length === 1 && !selectedId) {
+        select.value = allProjects[0].id;
+      }
     }
 
-    function openCreateModal() {
+    async function openCreateModal() {
+      // Load projects on-demand if not yet loaded (handles fast clicks before loadAll completes)
+      if (allProjects.length === 0) {
+        try {
+          const pData = await getProjectsAPI();
+          allProjects = pData.projects || [];
+        } catch (err) {
+          showToast('Could not load projects: ' + err.message, 'error');
+          return;
+        }
+      }
+
+      if (allProjects.length === 0) {
+        showToast('Please create a Project first before adding a Meeting.', 'warning');
+        setTimeout(() => { window.location.href = 'projects.html'; }, 1800);
+        return;
+      }
+
       document.getElementById('meetingModalLabel').textContent = 'New Meeting';
       document.getElementById('meeting-id').value = '';
       document.getElementById('meeting-title').value = '';
@@ -177,8 +204,26 @@
       document.getElementById('meeting-participants').value = '';
       document.getElementById('meeting-desc').value = '';
       populateProjectDropdown();
-      modalInstance = new bootstrap.Modal(document.getElementById('meetingModal'));
+
+      const modalEl = document.getElementById('meetingModal');
+      if (!modalEl) {
+        showToast('Modal element not found. Please refresh the page.', 'error');
+        return;
+      }
+
+      if (typeof bootstrap === 'undefined') {
+        showToast('Bootstrap not loaded. Please check internet connection.', 'error');
+        return;
+      }
+
+      modalInstance = new bootstrap.Modal(modalEl);
       modalInstance.show();
+    }
+
+    function openEditById(id) {
+      const meeting = allMeetings.find(m => m.id === parseInt(id));
+      if (!meeting) { showToast('Meeting not found.', 'error'); return; }
+      openEditModal(meeting);
     }
 
     function openEditModal(meeting) {
@@ -200,7 +245,7 @@
       const title = document.getElementById('meeting-title').value.trim();
 
       if (!title) { showToast('Meeting title is required.', 'warning'); return; }
-      if (!id && !project_id) { showToast('Please select a project.', 'warning'); return; }
+      if (!id && !project_id) { showToast('Please select a project from the dropdown.', 'warning'); return; }
 
       const payload = {
         title,
@@ -217,12 +262,17 @@
         if (id) {
           await updateMeetingAPI(id, payload);
           showToast('Meeting updated!', 'success');
+          if (modalInstance) modalInstance.hide();
+          loadAll();
         } else {
-          await createMeetingAPI(payload);
-          showToast('Meeting created!', 'success');
+          const newMeeting = await createMeetingAPI(payload);
+          showToast('Meeting created! Opening...', 'success');
+          if (modalInstance) modalInstance.hide();
+          // Redirect directly to meeting detail
+          setTimeout(() => {
+            window.location.href = `meeting_detail.html?id=${newMeeting.id}`;
+          }, 800);
         }
-        if (modalInstance) modalInstance.hide();
-        loadAll();
       } catch (err) {
         showToast(err.message, 'error');
       } finally {
@@ -230,7 +280,9 @@
       }
     }
 
-    async function deleteMeeting(id, title) {
+    async function deleteMeeting(id) {
+      const meeting = allMeetings.find(m => m.id === id);
+      const title = meeting ? meeting.title : 'this meeting';
       if (!confirmAction(`Delete meeting "${title}"?`)) return;
       showLoading();
       try {

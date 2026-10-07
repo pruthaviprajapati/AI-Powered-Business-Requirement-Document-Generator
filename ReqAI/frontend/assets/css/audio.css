@@ -1,0 +1,212 @@
+/* ================================================================
+   ReqAI – Audio Recording & Upload UI Styles
+   ================================================================ */
+
+/* ── Record button ────────────────────────────────────────────── */
+.record-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+}
+.record-btn:hover {
+  background: #fecaca;
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+}
+
+.stop-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: #dc2626;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.4);
+  animation: pulse-recording 1.5s ease-in-out infinite;
+}
+.stop-btn:hover {
+  background: #b91c1c;
+  transform: scale(1.05);
+}
+
+/* Pulse animation while recording */
+@keyframes pulse-recording {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+}
+
+/* ── Recording timer ──────────────────────────────────────────── */
+.recording-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+}
+
+.rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #dc2626;
+  animation: blink 1s step-end infinite;
+  flex-shrink: 0;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Upload drop zone ─────────────────────────────────────────── */
+.upload-drop-zone {
+  border: 2px dashed #cbd5e1;
+  border-radius: var(--border-radius-sm);
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+}
+.upload-drop-zone:hover,
+.upload-drop-zone.dragover {
+  border-color: var(--primary);
+  background: #eef2ff;
+}
+.upload-drop-zone i {
+  font-size: 2rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+.upload-drop-zone p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Audio player ─────────────────────────────────────────────── */
+audio {
+  border-radius: var(--border-radius-sm);
+  outline: none;
+}
+audio:focus { outline: none; }
+
+/* ================================================================
+   Speaker Diarization UI Styles (Phase 3)
+   ================================================================ */
+
+/* ── Speaker timeline bar ─────────────────────────────────────── */
+.speaker-timeline {
+  height: 20px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  background: #f1f5f9;
+}
+
+/* ── Speaker transcript card ──────────────────────────────────── */
+.speaker-card {
+  transition: box-shadow 0.15s ease;
+}
+.speaker-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+/* ── Tab nav styling ──────────────────────────────────────────── */
+#transcript-tabs .nav-link {
+  color: var(--text-secondary);
+  font-size: .875rem;
+  font-weight: 500;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: .5rem 1rem;
+  background: none;
+  cursor: pointer;
+}
+#transcript-tabs .nav-link.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+#transcript-tabs .nav-link:hover:not(.active) {
+  color: var(--text-primary);
+  border-bottom-color: #e2e8f0;
+}
+
+/* ================================================================
+   NLP Requirements UI Styles (Phase 4)
+   ================================================================ */
+
+/* ── NLP tags (entities, lemmas, POS) ────────────────────────── */
+.nlp-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.entity-tag {
+  background: #ede9fe;
+  color: #5b21b6;
+  border: 1px solid #c4b5fd;
+}
+
+.lemma-tag {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.pos-tag {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.nlp-label {
+  background: rgba(0,0,0,.1);
+  border-radius: 999px;
+  padding: 0 0.3rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+/* ── Requirement card ─────────────────────────────────────────── */
+.requirement-card {
+  border-left: 3px solid var(--success);
+  transition: box-shadow 0.15s ease;
+}
+.requirement-card:hover {
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
+
+/* ── NLP expand button active state ──────────────────────────── */
+.nlp-expand-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}

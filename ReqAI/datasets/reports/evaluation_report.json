@@ -1,0 +1,193 @@
+{
+  "model": "distilbert-base-uncased",
+  "task": "multi-class requirement classification",
+  "num_labels": 12,
+  "labels": [
+    "Functional",
+    "Security",
+    "Performance",
+    "Availability",
+    "Usability",
+    "Scalability",
+    "Reliability",
+    "Maintainability",
+    "Operational",
+    "Portability",
+    "Legal",
+    "Non-Functional"
+  ],
+  "labels_in_test": [
+    "Functional",
+    "Security",
+    "Performance",
+    "Usability",
+    "Reliability",
+    "Maintainability",
+    "Portability"
+  ],
+  "hyperparameters": {
+    "epochs": 4,
+    "batch_size": 16,
+    "max_length": 128,
+    "learning_rate": 2e-05,
+    "warmup_ratio": 0.1,
+    "weight_decay": 0.01,
+    "random_seed": 42
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.4379,
+      "val_loss": 2.2048,
+      "val_acc": 0.3
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.1973,
+      "val_loss": 1.9828,
+      "val_acc": 0.3
+    },
+    {
+      "epoch": 3,
+      "train_loss": 2.0451,
+      "val_loss": 1.8583,
+      "val_acc": 0.3
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.9738,
+      "val_loss": 1.8124,
+      "val_acc": 0.3
+    }
+  ],
+  "best_val_accuracy": 0.3,
+  "test_accuracy": 0.35,
+  "test_loss": 2.2357,
+  "classification_report": {
+    "Functional": {
+      "precision": 0.35,
+      "recall": 1.0,
+      "f1-score": 0.5185185185185185,
+      "support": 7.0
+    },
+    "Security": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 3.0
+    },
+    "Performance": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 1.0
+    },
+    "Usability": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 2.0
+    },
+    "Reliability": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 5.0
+    },
+    "Maintainability": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 1.0
+    },
+    "Portability": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 1.0
+    },
+    "accuracy": 0.35,
+    "macro avg": {
+      "precision": 0.049999999999999996,
+      "recall": 0.14285714285714285,
+      "f1-score": 0.07407407407407407,
+      "support": 20.0
+    },
+    "weighted avg": {
+      "precision": 0.12249999999999998,
+      "recall": 0.35,
+      "f1-score": 0.18148148148148147,
+      "support": 20.0
+    }
+  },
+  "data_split": {
+    "train": 160,
+    "val": 20,
+    "test": 20
+  },
+  "confusion_matrix": [
+    [
+      7,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ]
+}

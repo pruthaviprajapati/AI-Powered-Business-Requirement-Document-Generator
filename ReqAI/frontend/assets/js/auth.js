@@ -33,13 +33,13 @@ function isAuthenticated() {
 
 function requireAuth() {
   if (!isAuthenticated()) {
-    window.location.href = '/frontend/pages/login.html';
+    window.location.href = 'login.html';
   }
 }
 
 function redirectIfAuthenticated() {
   if (isAuthenticated()) {
-    window.location.href = '/frontend/pages/dashboard.html';
+    window.location.href = 'dashboard.html';
   }
 }
 
@@ -50,7 +50,7 @@ async function logout() {
     console.error('Logout API error:', err);
   }
   clearSession();
-  window.location.href = '/frontend/pages/login.html';
+  window.location.href = 'login.html';
 }
 
 // Display current user name in topbar

@@ -1,375 +1,252 @@
 # ReqAI – AI Powered Business Requirement Document Generator
 
-**ReqAI** automates Software Requirement Engineering by recording meetings, transcribing conversations, extracting requirements using Machine Learning, and generating professional Business Requirement Documents (BRDs).
+ReqAI is a full-stack AI application that converts meeting recordings into structured Business Requirement Documents (BRD). It uses a multi-stage AI pipeline to transcribe audio, identify speakers, extract requirements, classify them with machine learning, detect duplicates, validate them with an LLM, and generate a professional Word document.
 
 ---
 
-## 🚀 Project Overview
+## Problem Statement
 
-ReqAI transforms the traditional requirement gathering process:
-- **Before**: Manual note-taking → Manual document writing → Time-consuming
-- **After**: Record meeting → AI processes audio → Auto-generate BRD
+Requirement-gathering meetings produce unstructured conversations. Turning those conversations into formal Business Requirement Documents requires significant manual effort from business analysts. ReqAI automates this entire process — from raw audio to a ready-to-download `.docx` BRD.
 
 ---
 
-## 📋 Development Phases
+## Features
 
-### ✅ Phase 1 – Foundation (Current)
-- Complete FastAPI backend
-- SQLite database with SQLAlchemy ORM
-- JWT authentication
-- User registration & login
-- Project management (CRUD)
-- Meeting management (CRUD)
-- Modern responsive frontend (HTML/CSS/JS/Bootstrap)
-
-### 🔄 Phase 2 – Speech & NLP (Next)
-- Audio file upload
-- Speech-to-text (faster-whisper)
-- Speaker identification (pyannote.audio)
-- NLP processing (spaCy)
-- Requirement extraction
-
-### 🤖 Phase 3 – Machine Learning
-- Fine-tuned DistilBERT requirement classifier
-- Semantic duplicate detection (Sentence Transformers)
-- Requirement categorization
-
-### 🧠 Phase 4 – AI Validation & Generation
-- Requirement validation (Groq API)
-- Follow-up question generation
-- Professional BRD generation
-- DOCX export (python-docx)
+- Audio recording (in-browser) and file upload (MP3, WAV, M4A, WEBM, OGG, FLAC)
+- Speech-to-text using faster-whisper
+- Speaker identification using pyannote.audio
+- NLP preprocessing with spaCy (tokenisation, lemmatisation, POS, NER)
+- Requirement candidate extraction with heuristic scoring
+- ML classification using a fine-tuned DistilBERT model (12 categories)
+- Semantic similarity and duplicate detection using Sentence Transformers
+- Requirement validation using Groq Llama 3.3 70B
+- Missing information detection and follow-up question generation
+- Business Requirement Document generation via Groq + python-docx
+- JWT-authenticated REST API
+- Responsive Bootstrap 5 frontend
 
 ---
 
-## 🛠 Technology Stack
+## Architecture
 
-### Backend
-- **Framework**: FastAPI
-- **Database**: SQLite + SQLAlchemy ORM
-- **Auth**: JWT (python-jose) + bcrypt password hashing
-- **Validation**: Pydantic
-
-### Frontend
-- **Core**: HTML5, CSS3, JavaScript (ES6)
-- **UI Framework**: Bootstrap 5
-- **Icons**: Font Awesome 6
-
-### Future AI Stack (Phase 2+)
-- faster-whisper (speech recognition)
-- pyannote.audio (speaker diarization)
-- spaCy (NLP)
-- DistilBERT (requirement classification)
-- Sentence Transformers (duplicate detection)
-- Groq API (LLM for validation & generation)
-- python-docx (document export)
+```
+Browser (HTML/CSS/JS/Bootstrap)
+          │
+          ▼ HTTP/REST (JWT)
+FastAPI Backend (Python 3.13)
+          │
+          ├── SQLite (SQLAlchemy)
+          │
+          ├── faster-whisper     → Speech-to-Text
+          ├── pyannote.audio     → Speaker Diarization
+          ├── spaCy              → NLP + Requirement Extraction
+          ├── DistilBERT (local) → Requirement Classification
+          ├── Sentence Transformers → Semantic Similarity
+          └── Groq Llama 3.3    → Validation + BRD Generation
+                                          │
+                                    python-docx → .docx BRD
+```
 
 ---
 
-## 📁 Project Structure
+## Technology Stack
+
+| Component | Technology |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript, Bootstrap 5 |
+| Backend | Python 3.13, FastAPI, Uvicorn |
+| Database | SQLite, SQLAlchemy 2 |
+| Auth | JWT (python-jose), bcrypt |
+| Speech | faster-whisper |
+| Diarization | pyannote.audio 3.3 |
+| NLP | spaCy 3.8 + en_core_web_sm |
+| ML Classifier | DistilBERT (distilbert-base-uncased, fine-tuned) |
+| Similarity | sentence-transformers (all-MiniLM-L6-v2) |
+| LLM | Groq API (llama-3.3-70b-versatile) |
+| BRD Export | python-docx |
+
+---
+
+## Folder Structure
 
 ```
 ReqAI/
 ├── backend/
 │   ├── app/
-│   │   ├── routers/         # API endpoints
-│   │   ├── models/          # SQLAlchemy ORM models
-│   │   ├── schemas/         # Pydantic request/response schemas
-│   │   ├── services/        # Business logic layer
-│   │   ├── database/        # Database session & engine
-│   │   ├── middleware/      # Request logging, etc.
-│   │   ├── auth/            # JWT dependencies
-│   │   ├── core/            # Config, security, logging
-│   │   ├── utils/           # Helper functions
-│   │   └── main.py          # FastAPI application entry
-│   ├── uploads/             # Audio file storage (Phase 2)
-│   ├── generated/           # Generated BRD files (Phase 4)
-│   ├── logs/                # Application logs
-│   ├── future_ml/           # ML models (Phase 3)
-│   ├── future_nlp/          # NLP models (Phase 2)
-│   ├── future_speech/       # Speech models (Phase 2)
-│   ├── requirements.txt
-│   ├── .env.example
-│   └── .env
+│   │   ├── ai/
+│   │   │   ├── classifier/     # Phase 5 – DistilBERT
+│   │   │   ├── llm/            # Phase 7 – Groq service
+│   │   │   ├── nlp/            # Phase 4 – spaCy NLP
+│   │   │   ├── similarity/     # Phase 6 – Sentence Transformers
+│   │   │   ├── speaker/        # Phase 3 – pyannote diarization
+│   │   │   └── speech/         # Phase 2 – faster-whisper
+│   │   ├── auth/               # JWT dependencies
+│   │   ├── brd/                # Phase 7 – BRD generation
+│   │   ├── core/               # config, security, logging
+│   │   ├── database/           # SQLAlchemy engine + session
+│   │   ├── middleware/
+│   │   ├── models/             # ORM models
+│   │   ├── routers/            # API endpoints
+│   │   ├── schemas/            # Pydantic schemas
+│   │   ├── services/           # Business logic
+│   │   └── utils/
+│   ├── tests/                  # pytest test suite (119 tests)
+│   ├── .env                    # Local secrets (not committed)
+│   ├── .env.example            # Template for configuration
+│   ├── migrate.py              # SQLite column migration script
+│   └── requirements.txt
+├── datasets/
+│   ├── raw/                    # Training CSV files
+│   └── processed/              # Splits, label mapping
+├── docs/                       # Technical documentation
 ├── frontend/
 │   ├── assets/
-│   │   ├── css/             # Theme & styles
-│   │   ├── js/              # Config, auth, API, UI utilities
-│   │   └── images/
-│   ├── pages/               # HTML pages
-│   │   ├── login.html
-│   │   ├── register.html
-│   │   ├── dashboard.html
-│   │   ├── projects.html
-│   │   ├── meetings.html
-│   │   ├── profile.html
-│   │   └── settings.html
+│   │   ├── css/
+│   │   └── js/
+│   ├── pages/
 │   └── index.html
-├── docs/
-├── .gitignore
-└── README.md
+└── models/
+    └── distilbert_requirement_classifier/  # Trained model weights
 ```
 
 ---
 
-## 🚀 Installation & Setup
+## Installation
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.12 or 3.13
 - pip
-- Live Server extension (VS Code) or any HTTP server
 
-### Backend Setup
+### 1. Clone / navigate to project
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd ReqAI/backend
-   ```
-
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   venv\Scripts\activate      # Windows
-   source venv/bin/activate  # macOS/Linux
-   ```
-
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env and set your SECRET_KEY
-   ```
-
-5. **Run the application**
-   ```bash
-   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-   ```
-
-   Server will start at: `http://127.0.0.1:8000`
-   API docs at: `http://127.0.0.1:8000/api/docs`
-
-### Frontend Setup
-
-1. **Open frontend folder**
-   ```bash
-   cd ../frontend
-   ```
-
-2. **Serve with Live Server**
-   - Right-click `index.html` → "Open with Live Server"
-   - Or use any static file server on port 5500
-
-3. **Access the application**
-   - Frontend: `http://127.0.0.1:5500`
-   - Login page: `http://127.0.0.1:5500/pages/login.html`
-
----
-
-## 📖 Usage Guide
-
-### 1. Register Account
-- Navigate to register page
-- Enter full name, email, username, password
-- Account created ✓
-
-### 2. Login
-- Use username or email + password
-- JWT tokens stored in localStorage
-- Redirects to dashboard
-
-### 3. Create Project
-- Go to Projects page
-- Click "New Project"
-- Fill in project details, client info
-- Save
-
-### 4. Create Meeting
-- Go to Meetings page
-- Click "New Meeting"
-- Select project, add title, date, participants
-- Save
-
-### 5. Manage Data
-- View all projects & meetings on dashboard
-- Edit or delete any item
-- Update profile & change password
-
----
-
-## 🔐 Security Features
-
-- ✅ Password hashing with bcrypt
-- ✅ JWT access tokens (30 min expiry)
-- ✅ JWT refresh tokens (7 day expiry)
-- ✅ Protected API endpoints
-- ✅ CORS configuration
-- ✅ SQL injection protection (ORM)
-- ✅ Request validation (Pydantic)
-- ✅ Soft-delete architecture
-
----
-
-## 🗄 Database Schema
-
-### Users
-```sql
-id, full_name, email, username, hashed_password,
-is_verified, role, bio, profile_picture,
-created_at, updated_at, is_active
+```bash
+cd "5th sem project/ReqAI/backend"
 ```
 
-### Projects
-```sql
-id, name, description, client_name, client_email,
-status, owner_id, created_at, updated_at, is_active
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
 ```
 
-### Meetings
-```sql
-id, title, description, meeting_date, duration_minutes,
-participants, project_id, audio_file, transcript,
-processing_status, generated_brd, brd_file_path,
-requirements_count, follow_up_questions,
-created_at, updated_at, is_active
+### 3. Configure environment
+
+Copy `.env.example` to `.env` and fill in your keys:
+
+```bash
+copy .env.example .env
 ```
 
----
+Required keys:
+```env
+SECRET_KEY=your-strong-random-secret-key
+GROQ_API_KEY=gsk_...          # From https://console.groq.com
+PYANNOTE_HF_TOKEN=hf_...      # From https://huggingface.co/settings/tokens
+```
 
-## 🎯 API Endpoints
+### 4. Initialize database
 
-### Authentication
-- `POST /api/v1/auth/register` – Register new user
-- `POST /api/v1/auth/login` – Login and get tokens
-- `POST /api/v1/auth/logout` – Logout
-- `POST /api/v1/auth/refresh` – Refresh access token
-- `GET /api/v1/auth/me` – Get current user
+```bash
+python migrate.py
+```
 
-### Projects
-- `GET /api/v1/projects` – List all projects
-- `POST /api/v1/projects/` – Create project
-- `GET /api/v1/projects/{id}` – Get project details
-- `PUT /api/v1/projects/{id}` – Update project
-- `DELETE /api/v1/projects/{id}` – Delete project
+### 5. Start backend
 
-### Meetings
-- `GET /api/v1/meetings` – List all meetings
-- `POST /api/v1/meetings/` – Create meeting
-- `GET /api/v1/meetings/{id}` – Get meeting details
-- `PUT /api/v1/meetings/{id}` – Update meeting
-- `DELETE /api/v1/meetings/{id}` – Delete meeting
+```bash
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
 
-### Users
-- `GET /api/v1/users/profile` – Get user profile
-- `PUT /api/v1/users/profile` – Update profile
-- `PUT /api/v1/users/password` – Change password
-- `DELETE /api/v1/users/account` – Deactivate account
+### 6. Open frontend
 
-### Health
-- `GET /health` – Health check
+Open `frontend/index.html` in your browser, or serve with Live Server (VS Code extension).
+
+The frontend connects to `http://127.0.0.1:8000/api/v1` by default.
 
 ---
 
-## 🎨 UI Features
+## AI Model Setup
 
-- ✅ Modern dark sidebar layout
-- ✅ Fully responsive (mobile, tablet, desktop)
-- ✅ Dashboard with statistics cards
-- ✅ Data tables with search & pagination
-- ✅ Modal forms for create/edit
-- ✅ Toast notifications
-- ✅ Loading overlays
-- ✅ Status badges
-- ✅ Professional color theme
+### spaCy (required)
+```bash
+python -m spacy download en_core_web_sm
+```
 
----
+### DistilBERT (already trained)
+The trained model is in `models/distilbert_requirement_classifier/`.
+No action required. To retrain:
+```bash
+python -m app.ai.classifier.training.train
+```
 
-## 🔮 Future Enhancements (Phase 2+)
+### Sentence Transformers
+`all-MiniLM-L6-v2` downloads automatically on first use (~22 MB).
 
-### Phase 2 Features
-- Audio file upload & storage
-- Real-time transcription display
-- Speaker identification visualization
-- NLP-based sentence extraction
-- Requirement candidate highlighting
+### faster-whisper
+Whisper model (`base` by default) downloads automatically on first transcription.
 
-### Phase 3 Features
-- ML model training interface
-- Requirement category statistics
-- Duplicate detection dashboard
-- Requirement knowledge base
-- Similarity score visualization
+### pyannote.audio
+Requires a HuggingFace token with accepted model terms at:
+`https://huggingface.co/pyannote/speaker-diarization-3.1`
 
-### Phase 4 Features
-- One-click BRD generation
-- DOCX template customization
-- Follow-up question interface
-- Requirement completeness scoring
-- Export to multiple formats
+### Groq
+Get a free API key at `https://console.groq.com`. No local model download required.
 
 ---
 
-## 🐛 Troubleshooting
+## Running Tests
 
-### Backend won't start
-- Check `.env` file exists
-- Verify all dependencies installed: `pip list`
-- Check port 8000 is not in use
-- View logs in `backend/logs/reqai.log`
+```bash
+python -m pytest tests/ -v
+```
 
-### Frontend can't connect to API
-- Verify backend is running on port 8000
-- Check CORS settings in `.env`
-- Verify `CONFIG.API_BASE_URL` in `config.js`
-- Check browser console for errors
-
-### Database issues
-- Delete `reqai.db` to reset database
-- Restart backend to recreate tables
-- Check SQLAlchemy logs when `DEBUG=true`
+Expected: **119 passed**
 
 ---
 
-## 🤝 Contributing
+## Demo Workflow
 
-Phase 1 is complete. Contributions for Phase 2+ are welcome:
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/phase2-audio`
-3. Commit changes: `git commit -m 'Add audio upload'`
-4. Push to branch: `git push origin feature/phase2-audio`
-5. Submit pull request
-
----
-
-## 📄 License
-
-This project is for educational purposes. Modify as needed.
-
----
-
-## 👤 Author
-
-**Your Name**
-- Project: ReqAI
-- Architecture: Multi-phase AI-powered requirement engineering
-- Contact: your-email@example.com
+1. Register → Login
+2. Create Project → Create Meeting
+3. Upload or record meeting audio
+4. Click **Transcribe Audio** (Raw Transcript tab)
+5. Click **Identify Speakers** (Speaker Transcript tab)
+6. Click **Extract Requirements** (Requirements tab)
+7. Click **Classify Requirements** (ML Classify tab)
+8. Click **Analyze Similarity** (Similarity tab) — review duplicates
+9. Click **Validate Requirements** (Validation tab)
+10. Click **Generate Follow-up Questions** — answer key questions
+11. Switch to **BRD** tab → Click **Generate BRD**
+12. Click **Download BRD (.docx)**
 
 ---
 
-## 🙏 Acknowledgments
+## API Documentation
 
-- FastAPI documentation
-- Bootstrap team
-- Font Awesome icons
-- HuggingFace transformers
-- Groq API
+With backend running:
+- Swagger UI: `http://127.0.0.1:8000/api/docs`
+- ReDoc: `http://127.0.0.1:8000/api/redoc`
+- OpenAPI JSON: `http://127.0.0.1:8000/api/openapi.json`
 
 ---
 
-**Phase 1 Complete ✓**  
-Next: Phase 2 – Audio Upload & Speech Recognition
+## Known Limitations
+
+- DistilBERT accuracy is ~35% on the 200-sample training dataset. Accuracy improves with more labelled data.
+- Speaker diarization accuracy depends on audio quality and speaker separation.
+- Groq API requires internet connectivity and a valid API key.
+- pyannote.audio requires HuggingFace authentication.
+- Free hosting (Render/Vercel) may not support large ML models due to memory/storage constraints.
+- Human review of AI outputs is recommended before finalising any BRD.
+
+---
+
+## Future Scope
+
+- Larger, higher-quality labelled requirement datasets for better DistilBERT accuracy
+- Multi-language support
+- Real-time transcription
+- Advanced speaker role identification (Customer, Developer, Manager)
+- SRS and User Story generation
+- Test case generation from requirements
+- Jira/GitHub integration
+- Human feedback loop for model improvement

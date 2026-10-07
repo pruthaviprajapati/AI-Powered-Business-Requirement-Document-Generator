@@ -1,0 +1,21 @@
+sentence,category,source,label
+The application shall queue requests during high load and process them when available.,Reliability,dataset2,6
+The application shall maintain data integrity during system failures.,Reliability,dataset2,6
+The application must provide two-factor authentication.,Functional,dataset1,0
+The system shall provide a step-by-step wizard for complex tasks.,Usability,dataset1,4
+The system shall provide a dashboard for viewing all active projects.,Functional,dataset1,0
+The system shall maintain a history of all changes made to records.,Functional,dataset1,0
+The application shall use heartbeat monitoring to detect failures.,Reliability,dataset2,6
+The application must use secure session management.,Security,dataset2,1
+The application shall recover from failures within 30 seconds.,Reliability,dataset2,6
+All user sessions must be terminated after inactivity.,Security,dataset2,1
+The system shall provide continuous monitoring of system health.,Reliability,dataset2,6
+Users must be able to schedule automated reports.,Functional,dataset1,0
+The system shall allow printing of reports and documents.,Functional,dataset2,0
+The codebase shall follow SOLID design principles.,Maintainability,dataset1,7
+Database queries must complete within 100 milliseconds for 95 % of requests.,Performance,dataset1,2
+The application shall remember user preferences across sessions.,Usability,dataset1,4
+The system must validate all user inputs to prevent injection attacks.,Security,dataset2,1
+The application shall allow administrators to manage users.,Functional,dataset2,0
+The application must validate all user inputs before processing.,Functional,dataset1,0
+The application shall provide native mobile apps for iOS and Android.,Portability,dataset1,9

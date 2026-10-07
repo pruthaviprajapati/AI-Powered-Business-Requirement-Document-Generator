@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Detail • ReqAI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+  <link rel="stylesheet" href="../assets/css/audio.css">
+</head>
+<body>
+  <div class="main-content">
+    <div class="content-area">
+
+      <!-- Page header -->
+      <div class="d-flex align-items-center gap-2 mb-4">
+        <a href="meetings.html" class="btn btn-sm btn-light">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <div>
+          <h5 class="mb-0 fw-bold" id="meeting-title-heading">Meeting Detail</h5>
+          <small class="text-muted" id="meeting-project-name"></small>
+        </div>
+        <div class="ms-auto d-flex gap-2 align-items-center">
+          <span class="badge-status" id="meeting-status-badge">pending</span>
+          <button id="btn-auto-pipeline" class="btn btn-sm btn-success d-none" onclick="runAutoPipeline()" title="Run full AI pipeline and generate BRD automatically">
+            <i class="fas fa-magic me-1"></i> Auto BRD
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-4">
+
+        <!-- LEFT COLUMN: Meeting info + Audio -->
+        <div class="col-lg-5">
+
+          <!-- Meeting information card -->
+          <div class="req-card mb-3">
+            <div class="card-header">
+              <h6 class="mb-0 fw-semibold"><i class="fas fa-info-circle me-2 text-primary"></i>Meeting Information</h6>
+            </div>
+            <div class="card-body">
+              <table class="w-100" style="font-size:.875rem;">
+                <tr>
+                  <td class="text-muted pb-2" style="width:40%">Date</td>
+                  <td id="info-date" class="pb-2">—</td>
+                </tr>
+                <tr>
+                  <td class="text-muted pb-2">Duration</td>
+                  <td id="info-duration" class="pb-2">—</td>
+                </tr>
+                <tr>
+                  <td class="text-muted pb-2">Participants</td>
+                  <td id="info-participants" class="pb-2">—</td>
+                </tr>
+                <tr>
+                  <td class="text-muted">Description</td>
+                  <td id="info-description">—</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Audio Recording card -->
+          <div class="req-card mb-3">
+            <div class="card-header">
+              <h6 class="mb-0 fw-semibold"><i class="fas fa-microphone me-2 text-danger"></i>Record Audio</h6>
+            </div>
+            <div class="card-body text-center">
+              <div id="mic-permission-warning" class="alert alert-warning d-none" style="font-size:.8rem;">
+                <i class="fas fa-exclamation-triangle me-1"></i>
+                Microphone access is required. Please allow access when prompted.
+              </div>
+
+              <!-- Recording controls -->
+              <div class="d-flex align-items-center justify-content-center gap-3 my-3">
+                <button id="btn-record" class="record-btn" onclick="startRecording()" title="Start Recording">
+                  <i class="fas fa-microphone"></i>
+                </button>
+                <button id="btn-stop" class="stop-btn d-none" onclick="stopRecording()" title="Stop Recording">
+                  <i class="fas fa-stop"></i>
+                </button>
+              </div>
+
+              <!-- Timer -->
+              <div id="recording-timer" class="recording-timer d-none">
+                <span class="rec-dot"></span>
+                <span id="timer-display">00:00</span> Recording...
+              </div>
+
+              <!-- Status label -->
+              <p id="recording-status" class="text-muted mb-2" style="font-size:.8rem;">Press the mic to start</p>
+
+              <!-- Recorded audio preview -->
+              <div id="recorded-preview" class="d-none">
+                <audio id="recorded-audio" controls class="w-100 mb-2"></audio>
+                <div class="d-flex gap-2 justify-content-center">
+                  <button class="btn btn-sm btn-success" onclick="submitRecording()">
+                    <i class="fas fa-upload me-1"></i> Use This Recording
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" onclick="discardRecording()">
+                    <i class="fas fa-trash me-1"></i> Discard
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Audio Upload card -->
+          <div class="req-card mb-3">
+            <div class="card-header">
+              <h6 class="mb-0 fw-semibold"><i class="fas fa-file-audio me-2 text-primary"></i>Upload Audio File</h6>
+            </div>
+            <div class="card-body">
+              <div id="upload-drop-zone" class="upload-drop-zone" onclick="document.getElementById('audio-file-input').click()"
+                   ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p class="mb-1">Drag & drop or click to upload</p>
+                <small class="text-muted">MP3, WAV, M4A, WEBM, OGG, FLAC • Max 100 MB</small>
+              </div>
+              <input type="file" id="audio-file-input" accept=".mp3,.wav,.m4a,.webm,.ogg,.flac"
+                     class="d-none" onchange="handleFileSelect(this.files[0])">
+              <div id="selected-file-info" class="d-none mt-2">
+                <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded">
+                  <div style="font-size:.8rem;">
+                    <i class="fas fa-file-audio text-primary me-2"></i>
+                    <span id="selected-file-name"></span>
+                    <span id="selected-file-size" class="text-muted ms-2"></span>
+                  </div>
+                  <button class="btn btn-sm btn-outline-danger" onclick="clearSelectedFile()">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <button class="btn-primary-custom w-100 mt-2" onclick="uploadSelectedFile()">
+                  <i class="fas fa-upload me-1"></i> Upload File
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current audio player card -->
+          <div id="current-audio-card" class="req-card d-none">
+            <div class="card-header">
+              <h6 class="mb-0 fw-semibold"><i class="fas fa-headphones me-2 text-success"></i>Saved Audio</h6>
+              <button class="btn btn-sm btn-outline-danger" onclick="deleteAudio()">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+            <div class="card-body">
+              <p id="current-audio-name" class="text-muted mb-2" style="font-size:.8rem;"></p>
+              <audio id="current-audio-player" controls class="w-100"></audio>
+            </div>
+          </div>
+
+          <!-- Auto Pipeline progress card -->
+          <div id="auto-pipeline-card" class="req-card mb-3 d-none">
+            <div class="card-header">
+              <h6 class="mb-0 fw-semibold"><i class="fas fa-magic me-2 text-success"></i>Auto Pipeline</h6>
+              <span id="auto-pipeline-status" class="badge bg-info">running...</span>
+            </div>
+            <div class="card-body" style="font-size:.82rem;">
+              <div id="pipeline-steps">
+                <div id="step-transcribe" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> Transcription</div>
+                <div id="step-nlp" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> NLP Extraction</div>
+                <div id="step-classify" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> ML Classification</div>
+                <div id="step-similarity" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> Similarity Analysis</div>
+                <div id="step-validate" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> AI Validation</div>
+                <div id="step-questions" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> Follow-up Questions</div>
+                <div id="step-brd" class="d-flex align-items-center gap-2 mb-1"><i class="fas fa-circle-dot text-muted"></i> BRD Generation</div>
+              </div>
+              <div id="auto-pipeline-result" class="mt-2 d-none">
+                <div class="alert alert-success py-2 mb-2" style="font-size:.82rem;">
+                  <i class="fas fa-check-circle me-1"></i> BRD Generated!
+                </div>
+                <button class="btn btn-sm btn-success w-100" onclick="switchTab('brd'); loadBRDStatus()">
+                  <i class="fas fa-download me-1"></i> Go to BRD → Download
+                </button>
+              </div>
+              <div id="auto-pipeline-error" class="mt-2 d-none">
+                <div class="alert alert-warning py-2 mb-0" style="font-size:.8rem;" id="auto-pipeline-error-msg">
+                  Some steps failed. Check individual tabs for details.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end LEFT COLUMN -->
+
+        <!-- RIGHT COLUMN: Transcription + Speaker Diarization -->
+        <div class="col-lg-7">
+
+          <!-- Tab navigation -->
+          <ul class="nav nav-tabs mb-3" id="transcript-tabs">
+            <li class="nav-item">
+              <button class="nav-link active" id="tab-transcript-btn"
+                onclick="switchTab('transcript')">
+                <i class="fas fa-align-left me-1"></i> Raw Transcript
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="tab-speaker-btn"
+                onclick="switchTab('speaker')">
+                <i class="fas fa-users me-1"></i> Speaker Transcript
+                <span id="speaker-count-badge" class="badge bg-primary ms-1 d-none"></span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="tab-requirements-btn"
+                onclick="switchTab('requirements')">
+                <i class="fas fa-list-check me-1"></i> Requirements
+                <span id="req-count-badge" class="badge bg-success ms-1 d-none"></span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="tab-classify-btn"
+                onclick="switchTab('classify')">
+                <i class="fas fa-robot me-1"></i> ML Classify
+                <span id="classify-count-badge" class="badge bg-warning text-dark ms-1 d-none"></span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="tab-similarity-btn"
+                onclick="switchTab('similarity')">
+                <i class="fas fa-code-compare me-1"></i> Similarity
+                <span id="sim-count-badge" class="badge bg-danger ms-1 d-none"></span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="tab-validate-btn"
+                onclick="switchTab('validate')">
+                <i class="fas fa-shield-check me-1"></i> Validation
+                <span id="validate-count-badge" class="badge bg-info ms-1 d-none"></span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" id="tab-brd-btn"
+                onclick="switchTab('brd')">
+                <i class="fas fa-file-word me-1"></i> BRD
+              </button>
+            </li>
+          </ul>
+
+          <!-- ── RAW TRANSCRIPT PANEL ────────────────────────── -->
+          <div id="panel-transcript">
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold"><i class="fas fa-wand-magic-sparkles me-2 text-primary"></i>Transcription</h6>
+                <span id="transcript-lang-badge" class="badge bg-light text-secondary d-none"></span>
+              </div>
+              <div class="card-body">
+                <div id="transcribe-action" class="text-center py-2">
+                  <button id="btn-transcribe" class="btn-primary-custom" onclick="triggerTranscription()" disabled>
+                    <i class="fas fa-wand-magic-sparkles me-1"></i> Transcribe Audio
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="transcribe-hint">
+                    Upload or record audio first, then click Transcribe.
+                  </p>
+                </div>
+                <div id="transcribing-indicator" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Transcribing audio...</p>
+                  <p class="text-muted" style="font-size:.8rem;">This may take a moment.</p>
+                </div>
+                <div id="transcript-output" class="d-none">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label-custom mb-0">Transcript</label>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="copyTranscript()">
+                      <i class="fas fa-copy me-1"></i> Copy
+                    </button>
+                  </div>
+                  <textarea id="transcript-text" class="form-control-custom" rows="14"
+                    style="font-size:.85rem;line-height:1.7;font-family:monospace;resize:vertical;"></textarea>
+                  <div class="d-flex justify-content-between mt-2">
+                    <small id="transcript-word-count" class="text-muted"></small>
+                    <small id="transcript-completed-at" class="text-muted"></small>
+                  </div>
+                </div>
+                <div id="transcript-error" class="d-none">
+                  <div class="alert alert-danger mb-0" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Transcription failed:</strong>
+                    <span id="transcript-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom mt-2" onclick="triggerTranscription()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── SPEAKER TRANSCRIPT PANEL ───────────────────── -->
+          <div id="panel-speaker" class="d-none">
+
+            <!-- Diarize action -->
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold"><i class="fas fa-users me-2 text-primary"></i>Speaker Diarization</h6>
+                <span id="diarization-status-badge" class="badge-status badge-pending">pending</span>
+              </div>
+              <div class="card-body">
+
+                <!-- Action button -->
+                <div id="diarize-action" class="text-center py-2">
+                  <button id="btn-diarize" class="btn-primary-custom" onclick="triggerDiarization()" disabled>
+                    <i class="fas fa-users me-1"></i> Identify Speakers
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="diarize-hint">
+                    Complete transcription first, then identify speakers.
+                  </p>
+                </div>
+
+                <!-- Diarizing spinner -->
+                <div id="diarizing-indicator" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Identifying speakers...</p>
+                  <p class="text-muted" style="font-size:.8rem;">
+                    Analysing audio for speaker patterns. This may take a few minutes.
+                  </p>
+                </div>
+
+                <!-- Diarization error -->
+                <div id="diarize-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Diarization failed:</strong>
+                    <span id="diarize-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom" onclick="triggerDiarization()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Speaker Summary -->
+            <div id="speaker-summary-card" class="req-card mb-3 d-none">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold"><i class="fas fa-chart-pie me-2 text-primary"></i>Speaker Summary</h6>
+                <button class="btn btn-sm btn-outline-secondary" onclick="copySpeakerTranscript()">
+                  <i class="fas fa-copy me-1"></i> Copy
+                </button>
+              </div>
+              <div class="card-body">
+                <div id="speaker-stats-grid" class="row g-2 mb-3"></div>
+                <!-- Speaker timeline bar -->
+                <div id="speaker-timeline" class="speaker-timeline mb-1"></div>
+                <div id="speaker-timeline-legend" class="d-flex flex-wrap gap-2 mt-2"></div>
+              </div>
+            </div>
+
+            <!-- Speaker Transcript Cards -->
+            <div id="speaker-segments-container"></div>
+
+          </div>
+
+          <!-- ── REQUIREMENTS PANEL (Phase 4) ───────────────── -->
+          <div id="panel-requirements" class="d-none">
+
+            <!-- NLP Action card -->
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-brain me-2 text-primary"></i>NLP Processing
+                </h6>
+                <span id="nlp-status-badge" class="badge-status badge-pending">pending</span>
+              </div>
+              <div class="card-body">
+                <div id="nlp-action" class="text-center py-2">
+                  <button id="btn-process-nlp" class="btn-primary-custom" onclick="triggerNLP()" disabled>
+                    <i class="fas fa-brain me-1"></i> Extract Requirements
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="nlp-hint">
+                    Complete transcription first, then extract requirements.
+                  </p>
+                </div>
+                <div id="nlp-processing" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Running NLP pipeline...</p>
+                  <p class="text-muted" style="font-size:.8rem;">Cleaning, segmenting, extracting candidates.</p>
+                </div>
+                <div id="nlp-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>NLP failed:</strong> <span id="nlp-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom" onclick="triggerNLP()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+                <div id="nlp-stats" class="d-none">
+                  <div class="row g-2 mt-1">
+                    <div class="col-6">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--primary);" id="stat-total-sentences">0</div>
+                        <div style="font-size:.75rem;color:var(--text-secondary);">Total Sentences</div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--success);" id="stat-candidates">0</div>
+                        <div style="font-size:.75rem;color:var(--text-secondary);">Req. Candidates</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Requirement Candidates list -->
+            <div id="requirements-container"></div>
+
+          </div>
+
+          <!-- ── ML CLASSIFICATION PANEL (Phase 5) ─────────── -->
+          <div id="panel-classify" class="d-none">
+
+            <!-- Model status card -->
+            <div id="ml-model-status-card" class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-microchip me-2 text-warning"></i>DistilBERT Model Status
+                </h6>
+                <span id="ml-model-badge" class="badge bg-secondary">checking...</span>
+              </div>
+              <div class="card-body">
+                <div id="ml-model-info" class="d-none">
+                  <div class="row g-2">
+                    <div class="col-4">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.1rem;font-weight:700;color:var(--warning);" id="ml-model-accuracy">—</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Test Accuracy</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.1rem;font-weight:700;color:var(--primary);" id="ml-model-labels">—</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Categories</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.1rem;font-weight:700;color:var(--success);" id="ml-model-version">—</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Version</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="ml-model-untrained" class="d-none">
+                  <div class="alert alert-warning mb-0" style="font-size:.875rem;">
+                    <i class="fas fa-triangle-exclamation me-2"></i>
+                    <strong>Model not trained yet.</strong><br>
+                    Run the training pipeline from your terminal:<br>
+                    <code style="font-size:.8rem;">python -m app.ai.classifier.training.train</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Classify action card -->
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-robot me-2 text-primary"></i>ML Classification
+                </h6>
+                <span id="classify-status-badge" class="badge-status badge-pending">pending</span>
+              </div>
+              <div class="card-body">
+
+                <!-- Action button -->
+                <div id="classify-action" class="text-center py-2">
+                  <button id="btn-classify" class="btn-primary-custom" onclick="triggerClassification()" disabled>
+                    <i class="fas fa-robot me-1"></i> Classify Requirements
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="classify-hint">
+                    Run NLP extraction first, then classify with DistilBERT.
+                  </p>
+                </div>
+
+                <!-- Classifying spinner -->
+                <div id="classifying-indicator" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Running DistilBERT classification...</p>
+                  <p class="text-muted" style="font-size:.8rem;">
+                    Analysing requirement candidates. This may take a moment.
+                  </p>
+                </div>
+
+                <!-- Classification error -->
+                <div id="classify-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Classification failed:</strong>
+                    <span id="classify-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom" onclick="triggerClassification()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+
+                <!-- Classification stats -->
+                <div id="classify-stats" class="d-none mt-1">
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--primary);" id="stat-classified">0</div>
+                        <div style="font-size:.75rem;color:var(--text-secondary);">Classified</div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.5rem;font-weight:700;color:var(--success);" id="stat-categories">0</div>
+                        <div style="font-size:.75rem;color:var(--text-secondary);">Categories Found</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Category distribution chart -->
+            <div id="category-chart-card" class="req-card mb-3 d-none">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-chart-bar me-2 text-primary"></i>Category Distribution
+                </h6>
+              </div>
+              <div class="card-body">
+                <div id="category-chart-bars"></div>
+              </div>
+            </div>
+
+            <!-- Classified requirements list -->
+            <div id="classified-requirements-container"></div>
+
+          </div>
+
+          <!-- ── SIMILARITY PANEL (Phase 6) ──────────────── -->
+          <div id="panel-similarity" class="d-none">
+
+            <!-- Summary stats card -->
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-code-compare me-2 text-danger"></i>Semantic Similarity Analysis
+                </h6>
+                <span id="sim-status-badge" class="badge-status badge-pending">pending</span>
+              </div>
+              <div class="card-body">
+                <!-- Action button -->
+                <div id="sim-action" class="text-center py-2">
+                  <button id="btn-analyze-sim" class="btn-primary-custom" onclick="triggerSimilarityAnalysis()" disabled>
+                    <i class="fas fa-code-compare me-1"></i> Analyze Similarity
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="sim-hint">
+                    Run NLP extraction first, then analyze for duplicates.
+                  </p>
+                </div>
+                <!-- Spinner -->
+                <div id="sim-processing" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Generating embeddings &amp; comparing requirements...</p>
+                  <p class="text-muted" style="font-size:.8rem;">Using all-MiniLM-L6-v2 model.</p>
+                </div>
+                <!-- Error -->
+                <div id="sim-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Analysis failed:</strong> <span id="sim-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom" onclick="triggerSimilarityAnalysis()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+                <!-- Stats row -->
+                <div id="sim-stats" class="d-none mt-1">
+                  <div class="row g-2">
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:var(--primary);" id="stat-analyzed">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Analyzed</div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:var(--warning);" id="stat-similar">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Similar</div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:#ef4444;" id="stat-duplicates">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Pot. Dupl.</div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:var(--success);" id="stat-confirmed">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Confirmed</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-2 d-flex gap-2 align-items-center" style="font-size:.75rem;color:var(--text-secondary);">
+                    <i class="fas fa-circle-info"></i>
+                    Thresholds: duplicate ≥ <span id="sim-dup-threshold">0.85</span> &nbsp;|&nbsp;
+                    similar ≥ <span id="sim-rev-threshold">0.65</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filter bar -->
+            <div id="sim-filter-bar" class="req-card mb-3 d-none">
+              <div class="card-body py-2">
+                <div class="row g-2 align-items-end">
+                  <div class="col-sm-3">
+                    <label class="form-label-custom" style="font-size:.75rem;">Status</label>
+                    <select id="filter-sim-status" class="form-control-custom" style="font-size:.8rem;" onchange="applySimFilters()">
+                      <option value="">All</option>
+                      <option value="POTENTIAL_DUPLICATE">Potential Duplicate</option>
+                      <option value="SIMILAR">Similar</option>
+                      <option value="DUPLICATE_CONFIRMED">Confirmed Duplicate</option>
+                      <option value="NOT_DUPLICATE">Not Duplicate</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-3">
+                    <label class="form-label-custom" style="font-size:.75rem;">Category</label>
+                    <select id="filter-sim-category" class="form-control-custom" style="font-size:.8rem;" onchange="applySimFilters()">
+                      <option value="">All Categories</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-3">
+                    <label class="form-label-custom" style="font-size:.75rem;">Min Score</label>
+                    <input type="number" id="filter-sim-score" class="form-control-custom" style="font-size:.8rem;"
+                      min="0" max="1" step="0.05" placeholder="0.00" onchange="applySimFilters()">
+                  </div>
+                  <div class="col-sm-3">
+                    <label class="form-label-custom" style="font-size:.75rem;">Speaker</label>
+                    <input type="text" id="filter-sim-speaker" class="form-control-custom" style="font-size:.8rem;"
+                      placeholder="Speaker name" oninput="applySimFilters()">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Similarity pairs list -->
+            <div id="similarity-pairs-container"></div>
+
+          </div>
+
+          <!-- ── VALIDATION PANEL (Phase 7) ────────────────── -->
+          <div id="panel-validate" class="d-none">
+
+            <!-- Groq validation action card -->
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-shield-check me-2 text-info"></i>AI Requirement Validation
+                </h6>
+                <span id="validation-status-badge" class="badge-status badge-pending">pending</span>
+              </div>
+              <div class="card-body">
+                <div id="validation-action" class="text-center py-2">
+                  <button id="btn-validate" class="btn-primary-custom" onclick="triggerValidation()" disabled>
+                    <i class="fas fa-shield-check me-1"></i> Validate Requirements
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="validation-hint">
+                    Run NLP extraction first, then validate with Groq AI.
+                  </p>
+                </div>
+                <div id="validation-spinner" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Validating requirements with Llama...</p>
+                  <p class="text-muted" style="font-size:.8rem;">Analysing clarity, completeness, and ambiguity.</p>
+                </div>
+                <div id="validation-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>Validation failed:</strong> <span id="validation-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom" onclick="triggerValidation()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+                <div id="validation-summary" class="d-none mt-1">
+                  <div class="row g-2 mb-2">
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:var(--success);" id="val-stat-valid">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Valid</div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:var(--warning);" id="val-stat-clarify">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Needs Clarity</div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:#f97316;" id="val-stat-ambiguous">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Ambiguous</div>
+                      </div>
+                    </div>
+                    <div class="col-3">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.2rem;font-weight:700;color:#ef4444;" id="val-stat-incomplete">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Incomplete</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="p-2 rounded mb-2" style="background:#f0fdf4;font-size:.82rem;color:#166534;">
+                    <i class="fas fa-circle-info me-1"></i>
+                    Overall quality: <strong id="val-overall-quality">—</strong>
+                  </div>
+                  <p id="val-summary-text" class="mb-0" style="font-size:.83rem;color:var(--text-secondary);font-style:italic;"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Validated requirements list -->
+            <div id="validation-results-container"></div>
+
+            <!-- Follow-up questions card -->
+            <div class="req-card mb-3 mt-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-comments-question me-2 text-primary"></i>Follow-up Questions
+                </h6>
+                <span id="fq-count-badge" class="badge bg-primary d-none">0</span>
+              </div>
+              <div class="card-body">
+                <div id="fq-action" class="text-center py-2">
+                  <button id="btn-generate-questions" class="btn-primary-custom" onclick="triggerGenerateQuestions()" disabled>
+                    <i class="fas fa-wand-magic-sparkles me-1"></i> Generate Follow-up Questions
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="fq-hint">
+                    Run validation first to generate targeted questions.
+                  </p>
+                </div>
+                <div id="fq-spinner" class="text-center py-3 d-none">
+                  <div class="spinner-ring mx-auto mb-2"></div>
+                  <p class="mb-0" style="font-size:.85rem;">Generating questions...</p>
+                </div>
+                <div id="fq-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <span id="fq-error-msg"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="fq-list-container"></div>
+
+          </div>
+
+          <!-- ── BRD PANEL (Phase 7) ─────────────────────────── -->
+          <div id="panel-brd" class="d-none">
+
+            <!-- BRD readiness card -->
+            <div class="req-card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                  <i class="fas fa-file-word me-2" style="color:#1d4ed8;"></i>BRD Generation
+                </h6>
+                <span id="brd-ready-badge" class="badge bg-secondary">checking...</span>
+              </div>
+              <div class="card-body">
+                <!-- Readiness checklist -->
+                <div id="brd-readiness" class="mb-3 d-none">
+                  <div class="row g-2 mb-3">
+                    <div class="col-4">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:var(--primary);" id="brd-stat-reqs">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Requirements</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:var(--warning);" id="brd-stat-open-q">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Open Questions</div>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="text-center p-2" style="background:#f8fafc;border-radius:8px;">
+                        <div style="font-size:1.3rem;font-weight:700;color:var(--success);" id="brd-stat-answered-q">0</div>
+                        <div style="font-size:.7rem;color:var(--text-secondary);">Answered</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p id="brd-readiness-msg" class="text-muted mb-0" style="font-size:.82rem;"></p>
+                </div>
+
+                <!-- Generate button -->
+                <div class="text-center py-2">
+                  <button id="btn-generate-brd" class="btn-primary-custom" onclick="triggerGenerateBRD()" disabled>
+                    <i class="fas fa-file-word me-1"></i> Generate BRD
+                  </button>
+                  <p class="text-muted mt-2 mb-0" style="font-size:.8rem;" id="brd-hint">
+                    Load BRD status first.
+                  </p>
+                </div>
+
+                <!-- BRD spinner -->
+                <div id="brd-spinner" class="text-center py-4 d-none">
+                  <div class="spinner-ring mx-auto mb-3"></div>
+                  <p class="fw-semibold mb-1">Generating BRD with Llama...</p>
+                  <p class="text-muted" style="font-size:.8rem;">Building structured document. This may take 30–60 seconds.</p>
+                </div>
+
+                <!-- BRD error -->
+                <div id="brd-error" class="d-none">
+                  <div class="alert alert-danger mb-2" style="font-size:.875rem;">
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <strong>BRD generation failed:</strong> <span id="brd-error-msg"></span>
+                  </div>
+                  <button class="btn-primary-custom" onclick="triggerGenerateBRD()">
+                    <i class="fas fa-rotate-right me-1"></i> Retry
+                  </button>
+                </div>
+
+                <!-- BRD success / download -->
+                <div id="brd-success" class="d-none mt-3">
+                  <div class="alert alert-success mb-3 py-2" style="font-size:.875rem;">
+                    <i class="fas fa-check-circle me-2"></i>
+                    BRD generated successfully.
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <button id="btn-download-brd" class="btn btn-success" onclick="downloadBRD()">
+                      <i class="fas fa-download me-1"></i> Download BRD (.docx)
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="triggerGenerateBRD()">
+                      <i class="fas fa-rotate-right me-1"></i> Re-generate
+                    </button>
+                  </div>
+                  <div id="brd-meta" class="mt-2" style="font-size:.78rem;color:var(--text-secondary);"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div><!-- end RIGHT COLUMN -->
+
+      </div><!-- end row -->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../assets/js/audio_recorder.js"></script>
+  <script src="../assets/js/speaker.js"></script>
+  <script src="../assets/js/requirements.js"></script>
+  <script src="../assets/js/classifier.js"></script>
+  <script src="../assets/js/similarity.js"></script>
+  <script src="../assets/js/validation.js"></script>
+  <script src="../assets/js/brd.js"></script>
+  <script src="../assets/js/autopipeline.js"></script>
+  <script>
+    requireAuth();
+    renderLayout('Meeting Detail', 'meetings');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const MEETING_ID = parseInt(urlParams.get('id'));
+
+    if (!MEETING_ID) {
+      showToast('No meeting ID provided.', 'error');
+      setTimeout(() => window.location.href = 'meetings.html', 1500);
+    }
+
+    async function loadMeeting() {
+      try {
+        const meeting = await getMeetingByIdAPI(MEETING_ID);
+        populateMeetingInfo(meeting);
+        refreshAudioPanel(meeting);
+        refreshTranscriptPanel(meeting);
+        refreshSpeakerPanel(meeting);
+        refreshRequirementsPanel(meeting);
+        refreshClassifyPanel(meeting);
+        refreshSimilarityPanel(meeting);
+        refreshValidatePanel(meeting);
+        refreshBRDPanel(meeting);
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    function populateMeetingInfo(m) {
+      document.getElementById('meeting-title-heading').textContent = m.title;
+      document.getElementById('info-date').textContent = m.meeting_date ? formatDate(m.meeting_date) : '—';
+      document.getElementById('info-duration').textContent = m.duration_minutes ? m.duration_minutes + ' min' : '—';
+      document.getElementById('info-participants').textContent = m.participants || '—';
+      document.getElementById('info-description').textContent = m.description || '—';
+      const badge = document.getElementById('meeting-status-badge');
+      badge.textContent = m.processing_status;
+      badge.className = 'badge-status badge-' + m.processing_status;
+    }
+
+    function refreshAudioPanel(m) {
+      const audioCard = document.getElementById('current-audio-card');
+      const btnTranscribe = document.getElementById('btn-transcribe');
+      const transcribeHint = document.getElementById('transcribe-hint');
+      const btnAuto = document.getElementById('btn-auto-pipeline');
+      if (m.audio_file_path) {
+        audioCard.classList.remove('d-none');
+        document.getElementById('current-audio-name').textContent = m.audio_original_name || 'Audio file';
+        const audioUrl = `${CONFIG.API_BASE_URL.replace('/api/v1','')}/${m.audio_file_path}`;
+        document.getElementById('current-audio-player').src = audioUrl;
+        btnTranscribe.disabled = false;
+        transcribeHint.textContent = 'Audio ready. Click Transcribe to process.';
+        if (btnAuto) btnAuto.classList.remove('d-none');
+      } else {
+        audioCard.classList.add('d-none');
+        btnTranscribe.disabled = true;
+        transcribeHint.textContent = 'Upload or record audio first, then click Transcribe.';
+        if (btnAuto) btnAuto.classList.add('d-none');
+      }
+    }
+
+    function refreshTranscriptPanel(m) {
+      const badge = document.getElementById('meeting-status-badge');
+      badge.textContent = m.processing_status;
+      badge.className = 'badge-status badge-' + m.processing_status;
+
+      const output = document.getElementById('transcript-output');
+      const indicator = document.getElementById('transcribing-indicator');
+      const action = document.getElementById('transcribe-action');
+      const errorDiv = document.getElementById('transcript-error');
+      const langBadge = document.getElementById('transcript-lang-badge');
+
+      output.classList.add('d-none');
+      indicator.classList.add('d-none');
+      errorDiv.classList.add('d-none');
+
+      if (m.processing_status === 'transcribing') {
+        indicator.classList.remove('d-none');
+        action.classList.add('d-none');
+        pollTranscriptionStatus();
+      } else if (m.processing_status === 'completed' && m.transcript) {
+        output.classList.remove('d-none');
+        action.classList.add('d-none');
+        document.getElementById('transcript-text').value = m.transcript;
+        const wordCount = m.transcript.trim().split(/\s+/).length;
+        document.getElementById('transcript-word-count').textContent = `${wordCount} words`;
+        if (m.processing_completed_at) {
+          document.getElementById('transcript-completed-at').textContent =
+            'Completed: ' + formatDateTime(m.processing_completed_at);
+        }
+        if (m.transcript_language) {
+          langBadge.textContent = 'Language: ' + m.transcript_language.toUpperCase();
+          langBadge.classList.remove('d-none');
+        }
+      } else if (m.processing_status === 'failed') {
+        errorDiv.classList.remove('d-none');
+        action.classList.remove('d-none');
+        document.getElementById('transcript-error-msg').textContent = m.processing_error || 'Unknown error.';
+      } else {
+        action.classList.remove('d-none');
+      }
+    }
+
+    // ── Tab switching ─────────────────────────────────────────────
+    function switchTab(tab) {
+      const panels = ['transcript','speaker','requirements','classify','similarity','validate','brd'];
+      panels.forEach(p => {
+        document.getElementById('panel-' + p).classList.toggle('d-none', tab !== p);
+        const btn = document.getElementById('tab-' + p + '-btn');
+        if (btn) btn.classList.toggle('active', tab === p);
+      });
+      if (tab === 'classify')    loadClassifiedRequirements();
+      if (tab === 'similarity')  loadSimilarityPairs();
+      if (tab === 'validate')    loadValidationTab();
+      if (tab === 'brd')         loadBRDStatus();
+    }
+
+    // ── Transcript actions ────────────────────────────────────────
+    async function triggerTranscription() {
+      document.getElementById('transcribing-indicator').classList.remove('d-none');
+      document.getElementById('transcribe-action').classList.add('d-none');
+      document.getElementById('transcript-error').classList.add('d-none');
+      try {
+        const result = await apiRequest(`/meetings/${MEETING_ID}/transcribe`, 'POST');
+        refreshTranscriptPanel({
+          processing_status: result.processing_status,
+          transcript: result.transcript,
+          transcript_language: result.transcript_language,
+          processing_completed_at: result.processing_completed_at,
+          processing_error: result.processing_error,
+        });
+        if (result.processing_status === 'completed') {
+          showToast('Transcription complete!', 'success');
+          loadMeeting();
+        }
+      } catch (err) {
+        document.getElementById('transcribing-indicator').classList.add('d-none');
+        document.getElementById('transcribe-action').classList.remove('d-none');
+        document.getElementById('transcript-error').classList.remove('d-none');
+        document.getElementById('transcript-error-msg').textContent = err.message;
+        showToast(err.message, 'error');
+      }
+    }
+
+    function pollTranscriptionStatus() {
+      const interval = setInterval(async () => {
+        try {
+          const data = await apiRequest(`/meetings/${MEETING_ID}/transcript`, 'GET');
+          if (data.processing_status !== 'transcribing') {
+            clearInterval(interval);
+            refreshTranscriptPanel(data);
+          }
+        } catch (err) { clearInterval(interval); }
+      }, 3000);
+    }
+
+    async function deleteAudio() {
+      if (!confirmAction('Delete this audio file and its transcript?')) return;
+      showLoading();
+      try {
+        await apiRequest(`/meetings/${MEETING_ID}/audio`, 'DELETE');
+        showToast('Audio deleted.', 'success');
+        loadMeeting();
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally { hideLoading(); }
+    }
+
+    function copyTranscript() {
+      const text = document.getElementById('transcript-text').value;
+      navigator.clipboard.writeText(text).then(() => showToast('Copied!', 'success'));
+    }
+
+    loadMeeting();
+  </script>
+</body>
+</html>

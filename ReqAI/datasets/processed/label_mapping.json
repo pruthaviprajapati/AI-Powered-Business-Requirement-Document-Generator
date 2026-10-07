@@ -1,0 +1,65 @@
+{
+  "dataset1_type_to_category": {
+    "F":   "Functional",
+    "FR":  "Functional",
+    "NFR": "Non-Functional",
+    "SE":  "Security",
+    "A":   "Availability",
+    "PE":  "Performance",
+    "LF":  "Usability",
+    "US":  "Usability",
+    "SC":  "Scalability",
+    "O":   "Operational",
+    "MN":  "Maintainability",
+    "L":   "Legal",
+    "PO":  "Portability",
+    "FT":  "Reliability"
+  },
+  "final_categories": [
+    "Functional",
+    "Security",
+    "Performance",
+    "Availability",
+    "Usability",
+    "Scalability",
+    "Reliability",
+    "Maintainability",
+    "Operational",
+    "Portability",
+    "Legal",
+    "Non-Functional"
+  ],
+  "label_to_id": {
+    "Functional":       0,
+    "Security":         1,
+    "Performance":      2,
+    "Availability":     3,
+    "Usability":        4,
+    "Scalability":      5,
+    "Reliability":      6,
+    "Maintainability":  7,
+    "Operational":      8,
+    "Portability":      9,
+    "Legal":           10,
+    "Non-Functional":  11
+  },
+  "id_to_label": {
+    "0":  "Functional",
+    "1":  "Security",
+    "2":  "Performance",
+    "3":  "Availability",
+    "4":  "Usability",
+    "5":  "Scalability",
+    "6":  "Reliability",
+    "7":  "Maintainability",
+    "8":  "Operational",
+    "9":  "Portability",
+    "10": "Legal",
+    "11": "Non-Functional"
+  },
+  "notes": {
+    "dataset1": "software_requirements_extended.csv - Type + Requirement columns. F and FR merged to Functional. US and LF merged to Usability.",
+    "dataset2": "Pure_Annotate_Dataset.csv - Binary security/reliability columns. security=1 maps to Security, reliability=1 maps to Reliability, both=0 maps to Functional.",
+    "merge_strategy": "Dataset2 non-NFR rows (NFR_boolean=0) are labelled Functional. Security=1 rows labelled Security. Reliability=1 rows labelled Reliability."
+  }
+}

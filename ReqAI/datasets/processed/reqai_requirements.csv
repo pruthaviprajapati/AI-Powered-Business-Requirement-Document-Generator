@@ -1,0 +1,201 @@
+sentence,category,source,label
+Users must be able to configure notification preferences.,Functional,dataset1,0
+The system shall provide role-based access control for all modules.,Functional,dataset1,0
+All user passwords must be stored using bcrypt hashing.,Security,dataset1,1
+The application shall use heartbeat monitoring to detect failures.,Reliability,dataset2,6
+The application must recover from network failures within 5 seconds.,Reliability,dataset2,6
+The system shall allow users to export data in multiple formats.,Functional,dataset2,0
+The system must generate alerts when resource utilization exceeds 80 %.,Operational,dataset1,8
+The system shall provide continuous monitoring of system health.,Reliability,dataset2,6
+The system shall provide a calendar view for scheduled events.,Functional,dataset2,0
+The system shall load any page within 3 seconds on a standard connection.,Performance,dataset1,2
+The system shall provide monitoring dashboards for operations team.,Operational,dataset1,8
+The system must maintain service continuity during infrastructure upgrades.,Reliability,dataset2,6
+The system shall provide workflow automation capabilities.,Functional,dataset2,0
+The application must provide users with the ability to request data deletion.,Legal,dataset1,10
+Users shall be able to set task priorities and deadlines.,Functional,dataset2,0
+The system shall support drag-and-drop for file management.,Functional,dataset2,0
+The system shall provide a step-by-step wizard for complex tasks.,Usability,dataset1,4
+The application shall support hot-standby configuration.,Reliability,dataset2,6
+The system must support Chrome Firefox Safari and Edge browsers.,Portability,dataset1,9
+System administrators shall be able to deploy updates without service interruption.,Operational,dataset1,8
+All user sessions must be terminated after inactivity.,Security,dataset2,1
+The application must validate all user inputs before processing.,Functional,dataset1,0
+The application must require strong password complexity.,Security,dataset2,1
+The system must support real-time collaboration for multiple users.,Functional,dataset1,0
+The application shall use microservices architecture to allow independent scaling.,Scalability,dataset1,5
+The application shall remember user preferences across sessions.,Usability,dataset1,4
+The system must support cloud deployment on AWS Azure and GCP.,Portability,dataset1,9
+The application must support automated backups every 24 hours.,Operational,dataset1,8
+The system must support graceful degradation when components fail.,Reliability,dataset2,6
+Users shall be able to comment on tasks and projects.,Functional,dataset2,0
+The system shall maintain a history of all changes made to records.,Functional,dataset1,0
+The system must log all user activities for audit purposes.,Functional,dataset1,0
+The user interface shall be accessible to users with disabilities following WCAG 2.1.,Usability,dataset1,4
+Code reviews are required before merging any changes to the main branch.,Maintainability,dataset1,7
+The application shall allow team collaboration on shared documents.,Functional,dataset2,0
+The system must validate all user inputs to prevent injection attacks.,Security,dataset2,1
+The system shall allow users to set their preferences.,Functional,dataset2,0
+The system must maintain transaction consistency under concurrent operations.,Reliability,dataset2,6
+The application shall support automated database backups.,Reliability,dataset2,6
+The application must comply with GDPR data protection requirements.,Legal,dataset1,10
+The system shall maintain data processing records as required by law.,Legal,dataset1,10
+The system must detect and recover from memory leaks automatically.,Reliability,dataset2,6
+All sensitive data must be encrypted at rest.,Security,dataset1,1
+The application shall allow users to export their data.,Functional,dataset1,0
+The application shall automatically retry failed operations.,Reliability,dataset2,6
+The system shall allow users to archive completed projects.,Functional,dataset2,0
+The application shall complete search queries in under 500 milliseconds.,Non-Functional,dataset1,11
+The application shall support single sign-on with OAuth2 providers.,Functional,dataset1,0
+The system must support database replication for disaster recovery.,Reliability,dataset2,6
+The application must maintain a circuit breaker for external service calls.,Reliability,dataset1,6
+The application shall perform health checks every 60 seconds.,Reliability,dataset2,6
+The application shall minimize downtime during updates.,Reliability,dataset2,6
+The application shall send email notifications for important events.,Functional,dataset1,0
+The application shall allow administrators to manage users.,Functional,dataset2,0
+The system must replicate data across multiple availability zones.,Reliability,dataset2,6
+The application shall use centralized logging for easy debugging.,Maintainability,dataset1,7
+The application shall maintain a circuit breaker for external services.,Reliability,dataset2,6
+The application shall use dependency injection for loose coupling.,Maintainability,dataset1,7
+The system must protect user data from unauthorized disclosure.,Security,dataset2,1
+The system shall maintain 99.95 % uptime during business hours.,Non-Functional,dataset1,11
+The application must use secure communication protocols only.,Security,dataset2,1
+The system must support auto-scaling based on traffic patterns.,Scalability,dataset1,5
+The system shall encrypt all data in transit using TLS 1.2 or higher.,Security,dataset1,1
+The application shall support multi-language interface.,Functional,dataset1,0
+User sessions shall expire after a period of inactivity.,Security,dataset1,1
+The system must prevent cross-site scripting attacks.,Security,dataset2,1
+The system shall provide failover capability for critical components.,Availability,dataset1,3
+The system shall allow printing of reports and documents.,Functional,dataset2,0
+The system should be able to process at least 500 transactions per second.,Performance,dataset1,2
+All API keys must be rotated every 90 days.,Security,dataset2,1
+The application shall follow the company brand guidelines for colors and fonts.,Usability,dataset1,4
+The system must log all security-related events for auditing.,Security,dataset2,1
+The user shall be able to track project progress visually.,Functional,dataset2,0
+The application must recover from failures within 30 seconds.,Availability,dataset1,3
+The application shall support role-based access control.,Functional,dataset2,0
+The system must store passwords using strong cryptographic hashing.,Security,dataset2,1
+The application must be available 99.9 % of the time.,Non-Functional,dataset1,11
+The system must scan uploaded files for malware before processing.,Security,dataset2,1
+The application shall support active-active clustering for zero downtime deployments.,Availability,dataset1,3
+The system shall provide automatic failover for critical services.,Reliability,dataset2,6
+The system shall provide a dashboard for viewing all active projects.,Functional,dataset1,0
+The system shall obtain user consent before collecting personal data.,Legal,dataset1,10
+Database queries must complete within 100 milliseconds for 95 % of requests.,Performance,dataset1,2
+The system must prevent unauthorized data exfiltration.,Security,dataset2,1
+The system must support automatic scaling based on demand.,Reliability,dataset2,6
+The system shall automatically retry failed operations up to 3 times.,Reliability,dataset1,6
+The system must provide redundant network connections.,Reliability,dataset2,6
+The application must sanitize all inputs to prevent XSS attacks.,Security,dataset1,1
+The application must perform input sanitization on all user data.,Security,dataset2,1
+The system shall support horizontal scaling by adding more server instances.,Scalability,dataset1,5
+Users shall be able to view and edit their profile information.,Functional,dataset1,0
+The system shall support bulk import and export operations.,Functional,dataset2,0
+The dashboard must display key metrics in a visually appealing chart format.,Usability,dataset1,4
+The application shall protect against SQL injection attacks.,Security,dataset1,1
+The system must allow bulk operations on selected records.,Functional,dataset1,0
+The system shall maintain consistency across distributed nodes.,Reliability,dataset2,6
+The system shall provide a user-friendly onboarding experience.,Functional,dataset2,0
+Users must be able to search and filter records by date and category.,Functional,dataset1,0
+The database shall support up to 1 million records without performance degradation.,Non-Functional,dataset1,11
+The application shall maintain a 99.5 % availability SLA.,Reliability,dataset2,6
+The system must allow file uploads up to 50 MB.,Functional,dataset1,0
+All API endpoints must require authentication using JWT tokens.,Security,dataset1,1
+The application must implement content security policy headers.,Security,dataset2,1
+The system must audit all changes to sensitive data.,Security,dataset2,1
+The user shall be able to upload files up to 100 MB.,Functional,dataset2,0
+Users shall be able to generate custom reports.,Functional,dataset2,0
+Users shall be able to assign roles to team members.,Functional,dataset1,0
+The application must support database sharding for large datasets.,Scalability,dataset1,5
+Users must be able to search and filter data by various criteria.,Functional,dataset2,0
+The application shall maintain data integrity during system failures.,Reliability,dataset2,6
+The application must perform security assessments regularly.,Security,dataset2,1
+The system shall allow users to log in with email and password.,Functional,dataset1,0
+The system shall provide integration with popular productivity tools.,Functional,dataset2,0
+The system shall allow scheduling of automated tasks.,Functional,dataset2,0
+The application shall support configuration changes without restart.,Operational,dataset1,8
+The system shall generate reports on demand.,Functional,dataset2,0
+The system must scale to support 10 times the current user base.,Scalability,dataset1,5
+The application must support graceful degradation when components fail.,Availability,dataset1,3
+The system must enforce least privilege access principles.,Security,dataset2,1
+The system must handle 1000 concurrent users without response time exceeding 5 seconds.,Non-Functional,dataset1,11
+The system shall be available 24 hours a day 7 days a week.,Availability,dataset1,3
+The system must maintain 99.95 % uptime during peak hours.,Reliability,dataset2,6
+The system shall process requests within acceptable time limits during peak load.,Reliability,dataset2,6
+Users shall be able to manage their notification settings.,Functional,dataset2,0
+The system shall respond to user requests within 2 seconds under normal load.,Non-Functional,dataset1,11
+The system must enforce session timeout after 30 minutes of inactivity.,Functional,dataset1,0
+The application must ensure data is backed up every hour.,Security,dataset2,1
+The system shall provide a REST API for integrations.,Functional,dataset2,0
+The application shall be deployable on Windows Linux and macOS.,Portability,dataset1,9
+The application shall maintain a security audit log.,Security,dataset1,1
+The system shall allow users to upload profile pictures.,Functional,dataset2,0
+The application shall support horizontal scaling to handle increased load.,Performance,dataset1,2
+The application shall allow managers to generate team performance reports.,Functional,dataset1,0
+The application must implement secure token storage.,Security,dataset2,1
+Planned downtime must not exceed 4 hours per month.,Availability,dataset1,3
+The application shall provide a search functionality for all records.,Functional,dataset2,0
+Users shall be able to create and manage tasks within a project.,Functional,dataset1,0
+The application shall recover from failures within 30 seconds.,Reliability,dataset2,6
+The system shall use consistent icons and terminology throughout.,Usability,dataset1,4
+The system must enforce multi-factor authentication for privileged accounts.,Security,dataset2,1
+The system shall allow users to organize items into folders.,Functional,dataset2,0
+All third-party integrations must use secure OAuth2 authentication.,Security,dataset2,1
+The system shall provide status dashboards for all services.,Reliability,dataset2,6
+The application shall cache frequently accessed data to improve response time.,Performance,dataset1,2
+The application must include a privacy policy that explains data usage.,Legal,dataset1,10
+The system must implement CSRF protection for all forms.,Security,dataset1,1
+The system shall generate PDF reports for completed projects.,Functional,dataset1,0
+The application must implement rate limiting to prevent abuse.,Security,dataset2,1
+The application shall require strong passwords with at least 12 characters.,Security,dataset1,1
+The application shall provide native mobile apps for iOS and Android.,Portability,dataset1,9
+The system must provide automatic recovery after database failure.,Reliability,dataset2,6
+The application must implement network intrusion detection.,Security,dataset2,1
+The application shall queue failed operations and process them when service is restored.,Reliability,dataset1,6
+The application must support import and export of data in CSV format.,Functional,dataset1,0
+The system shall provide an API for third-party integrations.,Functional,dataset1,0
+The system must allow users to undo the last 10 actions.,Usability,dataset1,4
+Users shall be able to invite colleagues to join the platform.,Functional,dataset2,0
+The system shall support active-active configuration for high availability.,Reliability,dataset2,6
+Users shall be able to reset their password via email.,Functional,dataset1,0
+All modules must have unit test coverage of at least 80 %.,Maintainability,dataset1,7
+The application must implement data loss prevention mechanisms.,Security,dataset2,1
+The application shall queue requests during high load and process them when available.,Reliability,dataset2,6
+The system must support load balancing across multiple instances.,Reliability,dataset2,6
+The system shall provide version history for documents.,Functional,dataset2,0
+The architecture shall allow new modules to be added without system downtime.,Scalability,dataset1,5
+The application must support dark mode and light mode themes.,Usability,dataset1,4
+All API requests must be authenticated using JWT tokens.,Security,dataset2,1
+The system must optimize images during upload to reduce storage and bandwidth.,Performance,dataset1,2
+The application must use secure session management.,Security,dataset2,1
+The user interface shall support keyboard navigation for all features.,Usability,dataset1,4
+The system must process uploaded files within 60 seconds.,Performance,dataset1,2
+The system must continue operating in read-only mode during database maintenance.,Reliability,dataset1,6
+The application must provide two-factor authentication.,Functional,dataset1,0
+The application must display helpful error messages with resolution guidance.,Usability,dataset1,4
+The application must protect against brute force login attempts.,Security,dataset2,1
+The system shall provide a mobile-friendly interface.,Functional,dataset2,0
+The system shall provide email notifications for critical events.,Functional,dataset2,0
+The system shall implement rate limiting to prevent brute force attacks.,Security,dataset1,1
+The system must verify the integrity of all downloaded files.,Security,dataset2,1
+The application must log all failed authentication attempts.,Security,dataset2,1
+The application must support user registration with email verification.,Functional,dataset1,0
+The user interface must be intuitive and require minimal training.,Usability,dataset1,4
+The system must detect and alert on abnormal system behavior.,Reliability,dataset2,6
+The application must use parameterized queries to prevent SQL injection.,Security,dataset2,1
+The system must prevent unauthorized access to administrative functions.,Security,dataset2,1
+Users shall be able to log in with their email and password.,Functional,dataset2,0
+The system must perform vulnerability scanning on every deployment.,Security,dataset1,1
+All sensitive data must be encrypted at rest using AES-256.,Security,dataset2,1
+Critical data shall be replicated across multiple geographic regions.,Reliability,dataset1,6
+The system must have comprehensive API documentation.,Maintainability,dataset1,7
+Users shall be able to create and manage projects.,Functional,dataset2,0
+The application must implement zero-trust security architecture.,Security,dataset2,1
+The system shall allow administrators to manage user accounts.,Functional,dataset1,0
+The application shall support blue-green deployment strategies.,Reliability,dataset2,6
+The codebase shall follow SOLID design principles.,Maintainability,dataset1,7
+The system shall provide a dashboard for monitoring activities.,Functional,dataset2,0
+Users must be able to schedule automated reports.,Functional,dataset1,0
+The user shall be able to add comments to any task or project item.,Functional,dataset1,0
+The application shall ensure no single point of failure exists.,Reliability,dataset2,6
+The system shall encrypt all communications using TLS.,Security,dataset2,1

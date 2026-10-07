@@ -24,11 +24,30 @@ aiofiles==23.2.1
 # ── HTTP Client (for future Groq API calls) ───────────────────────
 httpx==0.27.0
 
-# ── Future AI Stack (install when needed in Phase 2+) ─────────────
-# faster-whisper
-# pyannote.audio
-# spacy
-# transformers
-# sentence-transformers
+# ── Speech Recognition (Phase 2) ─────────────────────────────────
+faster-whisper==1.2.1
+
+# ── Speaker Diarization (Phase 3) ────────────────────────────────
+pyannote.audio==3.3.2
+
+# ── NLP Processing (Phase 4) ─────────────────────────────────────
+spacy==3.8.14
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+
+# ── Future AI Stack (install when needed in Phase 5+) ─────────────
 # groq
 # python-docx
+
+# ── ML Classification (Phase 5) ──────────────────────────────────
+torch>=2.3.0
+transformers>=4.41.0
+scikit-learn>=1.5.0
+pandas>=2.2.0
+numpy>=1.26.0
+
+# ── Semantic Similarity (Phase 6) ────────────────────────────────
+sentence-transformers>=2.6.0
+
+# ── LLM & BRD Generation (Phase 7) ──────────────────────────────
+groq>=0.9.0
+python-docx>=1.1.0

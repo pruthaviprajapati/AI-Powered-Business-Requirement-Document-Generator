@@ -38,6 +38,19 @@ backend/future_ml/*.pt
 backend/future_ml/*.pkl
 backend/future_nlp/*.bin
 
+# ── Trained ML model weights (too large for GitHub) ───────────────
+# The model is trained locally using: python -m app.ai.classifier.training.train
+# Model weights are excluded from git — regenerate after cloning
+models/distilbert_requirement_classifier/model.safetensors
+models/distilbert_requirement_classifier/tokenizer.json
+# Keep metadata and config (small files needed to understand the model)
+!models/distilbert_requirement_classifier/reqai_model_metadata.json
+!models/distilbert_requirement_classifier/config.json
+!models/distilbert_requirement_classifier/tokenizer_config.json
+
+# ── Test DB (generated during testing) ────────────────────────────
+backend/tests/test_reqai.db
+
 # ── IDEs ──────────────────────────────────────────────────────────
 .idea/
 .vscode/

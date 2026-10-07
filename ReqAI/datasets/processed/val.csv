@@ -1,0 +1,21 @@
+sentence,category,source,label
+The system shall provide email notifications for critical events.,Functional,dataset2,0
+The application shall support role-based access control.,Functional,dataset2,0
+The system shall load any page within 3 seconds on a standard connection.,Performance,dataset1,2
+The system shall provide failover capability for critical components.,Availability,dataset1,3
+The system must protect user data from unauthorized disclosure.,Security,dataset2,1
+The system shall support horizontal scaling by adding more server instances.,Scalability,dataset1,5
+The application must use parameterized queries to prevent SQL injection.,Security,dataset2,1
+The system must scan uploaded files for malware before processing.,Security,dataset2,1
+The application must provide users with the ability to request data deletion.,Legal,dataset1,10
+The application shall support hot-standby configuration.,Reliability,dataset2,6
+The system must prevent unauthorized access to administrative functions.,Security,dataset2,1
+The system shall provide integration with popular productivity tools.,Functional,dataset2,0
+The application must perform input sanitization on all user data.,Security,dataset2,1
+The system shall respond to user requests within 2 seconds under normal load.,Non-Functional,dataset1,11
+System administrators shall be able to deploy updates without service interruption.,Operational,dataset1,8
+The system must enforce session timeout after 30 minutes of inactivity.,Functional,dataset1,0
+The application must protect against brute force login attempts.,Security,dataset2,1
+Users shall be able to create and manage projects.,Functional,dataset2,0
+Users shall be able to manage their notification settings.,Functional,dataset2,0
+The application shall minimize downtime during updates.,Reliability,dataset2,6

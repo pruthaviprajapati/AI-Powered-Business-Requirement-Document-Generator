@@ -26,7 +26,13 @@ def is_allowed_audio_file(filename: str) -> bool:
 
 def ensure_directories_exist() -> None:
     """Create required runtime directories if they don't exist."""
-    for directory in [settings.UPLOAD_DIR, settings.GENERATED_DIR, settings.LOGS_DIR]:
+    for directory in [
+        settings.UPLOAD_DIR,
+        settings.AUDIO_UPLOAD_DIR,
+        settings.GENERATED_DIR,
+        settings.LOGS_DIR,
+        settings.BRD_DIR,
+    ]:
         Path(directory).mkdir(parents=True, exist_ok=True)
 
 

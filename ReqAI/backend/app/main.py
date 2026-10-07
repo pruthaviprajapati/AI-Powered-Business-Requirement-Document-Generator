@@ -12,6 +12,12 @@ from app.core.logging_config import setup_logging, get_logger
 from app.database.db import create_all_tables
 from app.middleware.request_logger import RequestLoggerMiddleware
 from app.routers import auth_router, user_router, project_router, meeting_router
+from app.routers import audio_router
+from app.routers import speaker_router
+from app.routers import nlp_router
+from app.routers import classifier_router
+from app.routers import similarity_router
+from app.routers import brd_router
 from app.utils.file_utils import ensure_directories_exist
 
 # ── Logging ───────────────────────────────────────────────────────────────────
@@ -27,6 +33,7 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
+    redirect_slashes=False,
 )
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
@@ -57,6 +64,9 @@ async def on_startup():
     ensure_directories_exist()
     create_all_tables()
     logger.info("Database tables verified.")
+    # Mount uploads as static so frontend can stream audio files
+    app.mount("/uploads", StaticFiles(directory=str(settings.UPLOAD_DIR)), name="uploads")
+    logger.info("Static files mounted at /uploads")
     logger.info("Application ready.")
 
 
@@ -71,6 +81,12 @@ app.include_router(auth_router.router, prefix=PREFIX)
 app.include_router(user_router.router, prefix=PREFIX)
 app.include_router(project_router.router, prefix=PREFIX)
 app.include_router(meeting_router.router, prefix=PREFIX)
+app.include_router(audio_router.router, prefix=PREFIX)
+app.include_router(speaker_router.router, prefix=PREFIX)
+app.include_router(nlp_router.router, prefix=PREFIX)
+app.include_router(classifier_router.router, prefix=PREFIX)
+app.include_router(similarity_router.router, prefix=PREFIX)
+app.include_router(brd_router.router, prefix=PREFIX)
 
 # ── Health check ──────────────────────────────────────────────────────────────
 @app.get("/health", tags=["Health"])
